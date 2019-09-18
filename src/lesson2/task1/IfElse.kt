@@ -68,7 +68,7 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
 fun ageDescription(age: Int): String {
     if ((age % 100 > 4) and (age % 100 < 21)) return ("$age лет")
     if (age % 10 == 1) return ("$age год")
-    return if (age % 10 > 4) ("$age лет")
+    return if ((age % 10 > 4) or (age % 10 == 0)) ("$age лет")
     else ("$age года")
 
 
@@ -143,7 +143,7 @@ fun rookOrBishopThreatens(
  */
 fun triangleKind(a: Double, b: Double, c: Double): Int {
     if ((a + b < c) or (a + c < b) or (b + c < a)) return (-1)
-    if ((a * a + b * b > c * c) and (b * b + c * c > b * b) and (b * b + c * c > a * a)) return (0)
+    if ((a * a + b * b > c * c) and (a * a + c * c > b * b) and (b * b + c * c > a * a)) return (0)
     return if ((a * a + b * b == c * c) or (b * b + c * c == b * b) or (b * b + c * c == a * a)) (1) else return (2)
 }
 

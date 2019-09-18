@@ -136,7 +136,10 @@ fun maxDivisor(n: Int): Int {
  * Взаимно простые числа не имеют общих делителей, кроме 1.
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
-fun isCoPrime(m: Int, n: Int): Boolean = TODO()
+fun isCoPrime(m: Int, n: Int): Boolean {
+    for (z in 2..min(m, n)) if ((m % z == 0) and (n % z == 0)) return false
+    return true
+}
 
 /**
  * Простая
@@ -145,7 +148,10 @@ fun isCoPrime(m: Int, n: Int): Boolean = TODO()
  * то есть, существует ли такое целое k, что m <= k*k <= n.
  * Например, для интервала 21..28 21 <= 5*5 <= 28, а для интервала 51..61 квадрата не существует.
  */
-fun squareBetweenExists(m: Int, n: Int): Boolean = TODO()
+fun squareBetweenExists(m: Int, n: Int): Boolean {
+    for (z in m..n) if ((sqrt(z.toDouble())) % 1.0 == 0.0) return true
+    return false
+}
 
 /**
  * Средняя
@@ -163,7 +169,18 @@ fun squareBetweenExists(m: Int, n: Int): Boolean = TODO()
  * Написать функцию, которая находит, сколько шагов требуется для
  * этого для какого-либо начального X > 0.
  */
-fun collatzSteps(x: Int): Int = TODO()
+fun collatzSteps(x: Int): Int {
+    var s = 0
+    var q = x
+    while (q != 1) if (q % 2 == 0) {
+        q /= 2
+        s += 1
+    } else {
+        q = (q * 3 + 1) / 2
+        s += 2
+    }
+    return s
+}
 
 /**
  * Средняя
@@ -171,10 +188,30 @@ fun collatzSteps(x: Int): Int = TODO()
  * Для заданного x рассчитать с заданной точностью eps
  * sin(x) = x - x^3 / 3! + x^5 / 5! - x^7 / 7! + ...
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю.
- * Подумайте, как добиться более быстрой сходимости ряда при больших значениях x.
+ * Подумайте, как добиться более быстройvar  сходимости ряда при больших значениях x.
  * Использовать kotlin.math.sin и другие стандартные реализации функции синуса в этой задаче запрещается.
  */
-fun sin(x: Double, eps: Double): Double = TODO()
+fun sin(x: Double, eps: Double): Double {
+    var sum = 0.0
+    fun slog(x: Double, n: Int): Double {
+        var sl = 1.0
+        for (z in 1 until 2 * n) {
+            sl *= x
+        }
+        sl /= factorial(2 * n - 1)
+        return sl
+    }
+
+    var n = 0
+    while (true) {
+        n += 1
+        val bin = slog(x, n)
+        if (n % 2 == 0) sum -= bin else sum += bin
+
+        if (bin < eps) break
+    }
+    return sum
+}
 
 /**
  * Средняя
@@ -194,7 +231,15 @@ fun cos(x: Double, eps: Double): Double = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun revert(n: Int): Int = TODO()
+fun revert(n: Int): Int {
+    var s = 0
+    var n1 = n
+    while (n1 > 0) {
+        s = s * 10 + n1 % 10
+        n1 /= 10
+    }
+    return s
+}
 
 /**
  * Средняя

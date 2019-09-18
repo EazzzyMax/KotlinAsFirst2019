@@ -2,6 +2,8 @@
 
 package lesson3.task1
 
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.sqrt
 
 /**
@@ -67,7 +69,7 @@ fun digitCountInNumber(n: Int, m: Int): Int =
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun digitNumber(n: Int): Int = TODO()
+fun digitNumber(n: Int): Int = if (n / 10 == 0) 1 else digitNumber(n / 10) + 1
 
 /**
  * Простая
@@ -75,7 +77,7 @@ fun digitNumber(n: Int): Int = TODO()
  * Найти число Фибоначчи из ряда 1, 1, 2, 3, 5, 8, 13, 21, ... с номером n.
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
-fun fib(n: Int): Int = TODO()
+fun fib(n: Int): Int = if ((n == 1) or (n == 2)) 1 else (fib(n - 1) + fib(n - 2))
 
 /**
  * Простая
@@ -83,21 +85,49 @@ fun fib(n: Int): Int = TODO()
  * Для заданных чисел m и n найти наименьшее общее кратное, то есть,
  * минимальное число k, которое делится и на m и на n без остатка
  */
-fun lcm(m: Int, n: Int): Int = TODO()
+
+fun lcm(m: Int, n: Int): Int {
+    /** про евклида слышал, если им быстрее - загуглю, переделаю */
+    if (m == n) return m
+    if (max(m, n) % min(m, n) == 0) return (max(m, n))
+    if (isPrime(m) or isPrime(n)) return m * n
+    var s = 1
+    var m1 = m
+    var n1 = n
+    while (!isPrime(m1) and !isPrime(n1) and (n1 != 1) and (m1 != 1)) {
+        for (z in 2..min(m1, n1)) {
+            if ((m1 % z == 0) and (n1 % z == 0)) {
+                s *= z
+                m1 /= z
+                n1 /= z
+                break
+            }
+        }
+        if (n1 == n) break
+    }
+    return m1 * n1 * s
+}
 
 /**
  * Простая
  *
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
-fun minDivisor(n: Int): Int = TODO()
+fun minDivisor(n: Int): Int {
+    for (z in 2..n) if (n % z == 0) return z
+    return 2
+    /** return 2 что бы не ругалось. можно ли иначе?*/
+}
 
 /**
  * Простая
  *
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
-fun maxDivisor(n: Int): Int = TODO()
+fun maxDivisor(n: Int): Int {
+    for (z in n - 1 downTo 1) if (n % z == 0) return z
+    return 2
+}
 
 /**
  * Простая

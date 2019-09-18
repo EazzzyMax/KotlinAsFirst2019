@@ -33,7 +33,7 @@ fun isNumberHappy(number: Int): Boolean = number / 1000 + number / 100 % 10 == n
  * Считать, что ферзи не могут загораживать друг друга.
  */
 fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean =
-    ((x1 == x2) or (y1 == y2) or (abs(x1 - y1) == abs(x2 - y2)))
+    ((x1 == x2) or (y1 == y2) or (abs(x1 - x2) == abs(y1 - y2)))
 
 
 /**
@@ -73,13 +73,13 @@ fun circleInside(
  */
 fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean {
     fun min1(a: Int, b: Int, c: Int): Int {
-        if ((a < b) and (a < c)) return a
-        return if (b < c) b else c
+        if ((a <= b) and (a <= c)) return a
+        return if (b <= c) b else c
     }
 
     fun min2(a: Int, b: Int, c: Int): Int {
-        if ((a > b) and (a < c)) return a
-        return if ((b > a) and (b < c)) b else c
+        if ((a >= b) and (a <= c)) return a
+        return if ((b >= a) and (b <= c)) b else c
     }
     return (min1(a, b, c) <= min(r, s)) and (min2(a, b, c) <= max(r, s))
 }

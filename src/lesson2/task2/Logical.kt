@@ -2,8 +2,11 @@
 
 package lesson2.task2
 
+
 import lesson1.task1.sqr
 import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.sqrt
 
 /**
@@ -68,4 +71,18 @@ fun circleInside(
  * кирпич 4 х 4 х 4 пройдёт через отверстие 4 х 4.
  * Вернуть true, если кирпич пройдёт
  */
-fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean = TODO()
+fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean {
+    fun min1(a: Int, b: Int, c: Int): Int {
+        if ((a < b) and (a < c)) return a
+        return if (b < c) b else c
+    }
+
+    fun min2(a: Int, b: Int, c: Int): Int {
+        if ((a > b) and (a < c)) return a
+        return if ((b > a) and (b < c)) b else c
+    }
+    return (min1(a, b, c) <= min(r, s)) and (min2(a, b, c) <= max(r, s))
+}
+
+
+

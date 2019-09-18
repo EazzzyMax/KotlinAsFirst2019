@@ -81,7 +81,7 @@ fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean {
         if (a == b) return a
         if (b == c) return b
         if (a == c) return a
-        if ((a > b) and (a < c) or (a < b) and (a > c)) return a
+        if (((a > b) and (a < c)) or ((a < b) and (a > c))) return a
         return if (((b > a) and (b < c)) or ((b < a) and (b > c))) b else c
     }
     return (min1(a, b, c) <= min(r, s)) and (min2(a, b, c) <= max(r, s))

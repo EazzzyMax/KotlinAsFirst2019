@@ -2,9 +2,7 @@
 
 package lesson3.task1
 
-import kotlin.math.max
-import kotlin.math.min
-import kotlin.math.sqrt
+import kotlin.math.*
 
 /**
  * Пример
@@ -77,7 +75,19 @@ fun digitNumber(n: Int): Int = if (n / 10 == 0) 1 else digitNumber(n / 10) + 1
  * Найти число Фибоначчи из ряда 1, 1, 2, 3, 5, 8, 13, 21, ... с номером n.
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
-fun fib(n: Int): Int = if ((n == 1) or (n == 2)) 1 else (fib(n - 1) + fib(n - 2))
+fun fib(n: Int): Int {
+    if (n == 1) return 1
+    if (n == 2) return 1
+    var x = 1
+    var y = 1
+    var z = 0
+    for (i in 1..n - 2) {
+        z = x + y
+        x = y
+        y = z
+    }
+    return z
+}
 
 /**
  * Простая
@@ -161,7 +171,7 @@ fun squareBetweenExists(m: Int, n: Int): Boolean {
  *   ЕСЛИ (X четное)
  *     Xслед = X /2
  *   ИНАЧЕ
- *     Xслед = 3 * X + 1
+ *     Xслед = 3 * X + 1ику
  *
  * например
  *   15 46 23 70 35 106 53 160 80 40 20 10 5 16 8 4 2 1 4 2 1 4 2 1 ...
@@ -192,23 +202,20 @@ fun collatzSteps(x: Int): Int {
  * Использовать kotlin.math.sin и другие стандартные реализации функции синуса в этой задаче запрещается.
  */
 fun sin(x: Double, eps: Double): Double {
-    var sum = 0.0
-    fun slog(x: Double, n: Int): Double {
-        var sl = 1.0
-        for (z in 1 until 2 * n) {
-            sl *= x
-        }
-        sl /= factorial(2 * n - 1)
-        return sl
+    val x1 = x % (2 * PI)
+    fun slog(x1: Double, n: Int): Double {
+        var x2 = x1.pow(n)
+        x2 /= factorial(n)
+        if (n % 4 == 3) x2 *= -1
+        return x2
     }
 
-    var n = 0
+    var sum = 0.0
+    var n = 1
     while (true) {
-        n += 1
-        val bin = slog(x, n)
-        if (n % 2 == 0) sum -= bin else sum += bin
-
-        if (bin < eps) break
+        sum += slog(x1, n)
+        if (abs(slog(x1, n)) < eps) break
+        n += 2
     }
     return sum
 }

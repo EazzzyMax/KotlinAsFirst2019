@@ -97,25 +97,12 @@ fun fib(n: Int): Int {
  */
 
 fun lcm(m: Int, n: Int): Int {
-    /** про евклида слышал, если им быстрее - загуглю, переделаю */
-    if (m == n) return m
-    if (max(m, n) % min(m, n) == 0) return (max(m, n))
-    if (isPrime(m) or isPrime(n)) return m * n
-    var s = 1
     var m1 = m
     var n1 = n
-    while (!isPrime(m1) and !isPrime(n1) and (n1 != 1) and (m1 != 1)) {
-        for (z in 2..min(m1, n1)) {
-            if ((m1 % z == 0) and (n1 % z == 0)) {
-                s *= z
-                m1 /= z
-                n1 /= z
-                break
-            }
-        }
-        if (n1 == n) break
-    }
-    return m1 * n1 * s
+    while ((m1 != 0) and (n1 != 0)) if (m1 > n1) m1 %= n1 else n1 %= m1
+    val nod = m1 + n1
+    return m * n / nod
+
 }
 
 /**

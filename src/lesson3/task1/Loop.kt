@@ -185,7 +185,7 @@ fun collatzSteps(x: Int): Int {
  * Для заданного x рассчитать с заданной точностью eps
  * sin(x) = x - x^3 / 3! + x^5 / 5! - x^7 / 7! + ...
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю.
- * Подумайте, как добиться более быстройvar  сходимости ряда при больших значениях x.
+ * Подумайте, как добиться более быстрой сходимости ряда при больших значениях x.
  * Использовать kotlin.math.sin и другие стандартные реализации функции синуса в этой задаче запрещается.
  */
 fun sin(x: Double, eps: Double): Double {
@@ -244,7 +244,19 @@ fun revert(n: Int): Int {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun isPalindrome(n: Int): Boolean = TODO()
+fun isPalindrome(n: Int): Boolean {
+    var n1 = n
+    while (true) {
+        val len = (log10(n1.toDouble())).toInt() + 1
+        if (len == 1) return true
+        if (len == 2) {
+            return n1 % 10 == n1 / 10
+        }
+        if ((n1 / 10.0.pow(len - 1)).toInt() == n1 % 10) n1 = (n1 % 10.0.pow(len - 1)).toInt() / 10
+        else return false
+    }
+
+}
 
 /**
  * Средняя
@@ -254,18 +266,39 @@ fun isPalindrome(n: Int): Boolean = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun hasDifferentDigits(n: Int): Boolean = TODO()
+fun hasDifferentDigits(n: Int): Boolean {
+    var n1 = n / 10
+    val a = n % 10
+    while (n1 != 0) {
+        if (n1 % 10 == a) n1 /= 10 else return true
+    }
+    return false
+}
 
 /**
  * Сложная
  *
  * Найти n-ю цифру последовательности из квадратов целых чисел:
- * 149162536496481100121144...
+ * 1 4 9 16 25 36 49 64 81 100 121 144...
  * Например, 2-я цифра равна 4, 7-я 5, 12-я 6.
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun squareSequenceDigit(n: Int): Int = TODO()
+fun squareSequenceDigit(n: Int): Int {
+    var kvo = 0
+    var sqr = 1
+    var plus = 3
+    var len = (log10(sqr.toDouble())).toInt() + 1
+
+    while (n > kvo + len) {
+        kvo += len
+        sqr += plus
+        plus += 2
+        len = (log10(sqr.toDouble())).toInt() + 1
+    }
+    return sqr / (10.0.pow(((kvo + len) - n).toInt())).toInt() % 10
+
+}
 
 /**
  * Сложная
@@ -276,4 +309,16 @@ fun squareSequenceDigit(n: Int): Int = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun fibSequenceDigit(n: Int): Int = TODO()
+fun fibSequenceDigit(n: Int): Int {
+    var kvo = 0
+    var number = 1
+    var len = (log10(fib(number).toDouble())).toInt() + 1
+    while (n > kvo + len) {
+        kvo += len
+        number++
+        len = (log10(fib(number).toDouble())).toInt() + 1
+    }
+    return (fib(number) / (10.0.pow(n = (kvo + len - n).toInt())).toInt()) % 10
+
+
+}

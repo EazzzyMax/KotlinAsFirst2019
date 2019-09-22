@@ -106,10 +106,10 @@ fun whichRookThreatens(
     rookX1: Int, rookY1: Int,
     rookX2: Int, rookY2: Int
 ): Int {
-    if ((kingX == rookX1) or (kingY == rookY1)) {
-        return if ((kingX == rookX2) or (kingY == rookY2)) (3) else (1)
+    if ((kingX == rookX1) || (kingY == rookY1)) {
+        return if ((kingX == rookX2) || (kingY == rookY2)) (3) else (1)
     }
-    return if ((kingX == rookX2) or (kingY == rookY2)) (2) else (0)
+    return if ((kingX == rookX2) || (kingY == rookY2)) (2) else (0)
 }
 
 /**
@@ -127,7 +127,7 @@ fun rookOrBishopThreatens(
     rookX: Int, rookY: Int,
     bishopX: Int, bishopY: Int
 ): Int {
-    if ((kingX == rookX) or (kingY == rookY)) {
+    if ((kingX == rookX) || (kingY == rookY)) {
         return if (abs(kingX - bishopX) == abs(kingY - bishopY)) (3) else return (1)
     }
     return if (abs(kingX - bishopX) == abs(kingY - bishopY)) (2) else return (0)
@@ -142,9 +142,9 @@ fun rookOrBishopThreatens(
  * Если такой треугольник не существует, вернуть -1.
  */
 fun triangleKind(a: Double, b: Double, c: Double): Int {
-    if ((a + b < c) or (a + c < b) or (b + c < a)) return (-1)
-    if ((a * a + b * b > c * c) and (a * a + c * c > b * b) and (b * b + c * c > a * a)) return (0)
-    return if ((a * a + b * b == c * c) or (b * b + c * c == b * b) or (b * b + c * c == a * a)) (1) else return (2)
+    if ((a + b < c) || (a + c < b) || (b + c < a)) return (-1)
+    if ((a * a + b * b > c * c) && (a * a + c * c > b * b) && (b * b + c * c > a * a)) return (0)
+    return if ((a * a + b * b == c * c) || (b * b + c * c == b * b) || (b * b + c * c == a * a)) (1) else return (2)
 }
 
 /**

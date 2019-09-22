@@ -33,7 +33,7 @@ fun isNumberHappy(number: Int): Boolean = number / 1000 + number / 100 % 10 == n
  * Считать, что ферзи не могут загораживать друг друга.
  */
 fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean =
-    ((x1 == x2) or (y1 == y2) or (abs(x1 - x2) == abs(y1 - y2)))
+    ((x1 == x2) || (y1 == y2) || (abs(x1 - x2) == abs(y1 - y2)))
 
 
 /**
@@ -43,9 +43,9 @@ fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean =
  * Вернуть число дней в этом месяце этого года по григорианскому календарю.
  */
 fun daysInMonth(month: Int, year: Int): Int {
-    if ((year % 4 != 0) and (month == 2)) return (28)
-    if ((year % 4 == 0) and (month == 2)) {
-        return if ((year % 100 == 0) and (year % 400 != 0)) (28) else (29)
+    if ((year % 4 != 0) && (month == 2)) return (28)
+    if ((year % 4 == 0) && (month == 2)) {
+        return if ((year % 100 == 0) && (year % 400 != 0)) (28) else (29)
     }
     return if (month < 8) (30 + month % 2) else (31 - month % 2)
 }
@@ -72,19 +72,15 @@ fun circleInside(
  * Вернуть true, если кирпич пройдёт
  */
 fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean {
-    fun min1(a: Int, b: Int, c: Int): Int {
-        if ((a <= b) and (a <= c)) return a
-        return if (b <= c) b else c
-    }
 
     fun min2(a: Int, b: Int, c: Int): Int {
         if (a == b) return a
         if (b == c) return b
         if (a == c) return a
-        if (((a > b) and (a < c)) or ((a < b) and (a > c))) return a
-        return if (((b > a) and (b < c)) or ((b < a) and (b > c))) b else c
+        if (((a > b) && (a < c)) || ((a < b) && (a > c))) return a
+        return if (((b > a) && (b < c)) || ((b < a) && (b > c))) b else c
     }
-    return (min1(a, b, c) <= min(r, s)) and (min2(a, b, c) <= max(r, s))
+    return (minOf(a, b, c) <= min(r, s)) && (min2(a, b, c) <= max(r, s))
 }
 
 

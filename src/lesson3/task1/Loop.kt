@@ -99,9 +99,12 @@ fun fib(n: Int): Int {
 fun lcm(m: Int, n: Int): Int {
     var m1 = m
     var n1 = n
-    while ((m1 != 0) and (n1 != 0)) if (m1 > n1) m1 %= n1 else n1 %= m1
-    val nod = m1 + n1
-    return m * n / nod
+    while ((m1 != 0) and (n1 != 0)) {
+        if (m1 > n1) m1 %= n1
+        else n1 %= m1
+    }
+    val gcd = m1 + n1
+    return m * n / gcd
 
 }
 
@@ -111,9 +114,10 @@ fun lcm(m: Int, n: Int): Int {
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
 fun minDivisor(n: Int): Int {
-    for (z in 2..n) if (n % z == 0) return z
-    return 2
-    /** return 2 что бы не ругалось. можно ли иначе?*/
+    for (z in 2..(sqrt(n.toDouble())).toInt()) {
+        if (n % z == 0) return z
+    }
+    return n
 }
 
 /**
@@ -121,10 +125,7 @@ fun minDivisor(n: Int): Int {
  *
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
-fun maxDivisor(n: Int): Int {
-    for (z in n - 1 downTo 1) if (n % z == 0) return z
-    return 2
-}
+fun maxDivisor(n: Int): Int = n / minDivisor(n)
 
 /**
  * Простая
@@ -146,8 +147,10 @@ fun isCoPrime(m: Int, n: Int): Boolean {
  * Например, для интервала 21..28 21 <= 5*5 <= 28, а для интервала 51..61 квадрата не существует.
  */
 fun squareBetweenExists(m: Int, n: Int): Boolean {
-    for (z in m..n) if ((sqrt(z.toDouble())) % 1.0 == 0.0) return true
-    return false
+    var m1 = sqrt(m.toDouble())
+    if (m1 % 1 == 0.0) m1.toInt()
+    else m1 = m1 - m1 % 1 + 1
+    return m1 <= sqrt(n.toDouble())
 }
 
 /**
@@ -169,12 +172,14 @@ fun squareBetweenExists(m: Int, n: Int): Boolean {
 fun collatzSteps(x: Int): Int {
     var s = 0
     var q = x
-    while (q != 1) if (q % 2 == 0) {
-        q /= 2
-        s += 1
-    } else {
-        q = (q * 3 + 1) / 2
-        s += 2
+    while (q != 1) {
+        if (q % 2 == 0) {
+            q /= 2
+            s += 1
+        } else {
+            q = (q * 3 + 1) / 2
+            s += 2
+        }
     }
     return s
 }
@@ -296,7 +301,7 @@ fun squareSequenceDigit(n: Int): Int {
         plus += 2
         len = (log10(sqr.toDouble())).toInt() + 1
     }
-    return sqr / (10.0.pow(((kvo + len) - n).toInt())).toInt() % 10
+    return sqr / 10.0.pow(((kvo + len) - n).toInt()).toInt() % 10
 
 }
 

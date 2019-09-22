@@ -275,7 +275,13 @@ fun convertToString(n: Int, base: Int): String {
  * из системы счисления с основанием base в десятичную.
  * Например: digits = (1, 3, 12), base = 14 -> 250
  */
-fun decimal(digits: List<Int>, base: Int): Int = TODO()
+fun decimal(digits: List<Int>, base: Int): Int {
+    var ans = 0
+    for (i in 0 until digits.size) {
+        ans = (ans + digits[i]) * base
+    }
+    return ans / base
+}
 
 /**
  * Сложная
@@ -289,17 +295,80 @@ fun decimal(digits: List<Int>, base: Int): Int = TODO()
  * Использовать функции стандартной библиотеки, напрямую и полностью решающие данную задачу
  * (например, str.toInt(base)), запрещается.
  */
-fun decimalFromString(str: String, base: Int): Int = TODO()
+fun decimalFromString(str: String, base: Int): Int {
+    var ans = 0
+    var alp = "0123456789abcdefghijklmnopqrstuvwxyz"
+    for (i in 0 until str.length) {
+        ans = (ans + alp.indexOf(str[i])) * base
+    }
+    return ans / base
+}
 
 /**
  * Сложная
- *
+ *                                                          1000=M    500=D    100=C    50=L    10=X    5=V    1=I
  * Перевести натуральное число n > 0 в римскую систему.
  * Римские цифры: 1 = I, 4 = IV, 5 = V, 9 = IX, 10 = X, 40 = XL, 50 = L,
  * 90 = XC, 100 = C, 400 = CD, 500 = D, 900 = CM, 1000 = M.
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
-fun roman(n: Int): String = TODO()
+fun roman(n: Int): String {
+    var n1 = n
+    var str = ""
+    while (n1 >= 1000) {
+        n1 -= 1000
+        str += "M"
+    }
+    while (n1 >= 900) {
+        n1 -= 900
+        str += "CM"
+    }
+    while (n1 >= 500) {
+        n1 -= 500
+        str += "D"
+    }
+    while (n1 >= 400) {
+        n1 -= 400
+        str += "CD"
+    }
+    while (n1 >= 100) {
+        n1 -= 100
+        str += "C"
+    }
+    while (n1 >= 90) {
+        n1 -= 90
+        str += "XC"
+    }
+    while (n1 >= 50) {
+        n1 -= 50
+        str += "L"
+    }
+    while (n1 >= 40) {
+        n1 -= 40
+        str += "XL"
+    }
+    while (n1 >= 10) {
+        n1 -= 10
+        str += "X"
+    }
+    while (n1 >= 9) {
+        n1 -= 9
+        str += "IX"
+    }
+    while (n1 >= 5) {
+        n1 -= 5
+        str += "V"
+    }
+    while (n1 >= 4) {
+        n1 -= 4
+        str += "IV"
+    }
+    while (n1 >= 1) {
+        n1 -= 1
+        str += "I"
+    }
+    return str
+}
 
 /**
  * Очень сложная

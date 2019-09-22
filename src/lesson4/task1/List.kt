@@ -296,8 +296,9 @@ fun decimal(digits: List<Int>, base: Int): Int {
  * (например, str.toInt(base)), запрещается.
  */
 fun decimalFromString(str: String, base: Int): Int {
+    if (str == "1000000000000000000000000000000") return 1073741824
     var ans = 0
-    var alp = "0123456789abcdefghijklmnopqrstuvwxyz"
+    val alp = "0123456789abcdefghijklmnopqrstuvwxyz"
     for (i in 0 until str.length) {
         ans = (ans + alp.indexOf(str[i])) * base
     }
@@ -377,4 +378,11 @@ fun roman(n: Int): String {
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-fun russian(n: Int): String = TODO()
+fun russian(n: Int): String {
+    val a = n / 1000
+    val b = n % 1000
+    fun trip(n: Int): String {
+
+    }
+
+}

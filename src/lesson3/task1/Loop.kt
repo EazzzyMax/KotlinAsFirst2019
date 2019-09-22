@@ -318,7 +318,7 @@ fun fibSequenceDigit(n: Int): Int {
         number++
         len = (log10(fib(number).toDouble())).toInt() + 1
     }
-    return (fib(number) / (10.0.pow(n = (kvo + len - n).toInt())).toInt()) % 10
+    return (fib(number) / 10.0.pow(n = (kvo + len - n).toInt()).toInt()) % 10
 
 
 }

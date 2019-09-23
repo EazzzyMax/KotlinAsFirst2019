@@ -276,11 +276,11 @@ fun convertToString(n: Int, base: Int): String {
  * Например: digits = (1, 3, 12), base = 14 -> 250
  */
 fun decimal(digits: List<Int>, base: Int): Int {
-    var ans = 0
-    for (i in 0 until digits.size) {
-        ans = (ans + digits[i]) * base
+    var ans = digits[0]
+    for (i in 1 until digits.size) {
+        ans = ans * base + digits[i]
     }
-    return ans / base
+    return ans
 }
 
 /**

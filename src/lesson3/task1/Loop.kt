@@ -204,9 +204,8 @@ fun sin(x: Double, eps: Double): Double {
 
     var sum = 0.0
     var n = 1
-    while (true) {
+    while (abs(slog(x1, n)) > eps) {
         sum += slog(x1, n)
-        if (abs(slog(x1, n)) < eps) break
         n += 2
     }
     return sum
@@ -252,7 +251,7 @@ fun revert(n: Int): Int {
 fun isPalindrome(n: Int): Boolean {
     var n1 = n
     while (true) {
-        val len = (log10(n1.toDouble())).toInt() + 1
+        val len = if (n1 != 0) (log10(n1.toDouble())).toInt() + 1 else 1
         if (len == 1) return true
         if (len == 2) {
             return n1 % 10 == n1 / 10
@@ -293,13 +292,13 @@ fun squareSequenceDigit(n: Int): Int {
     var kvo = 0
     var sqr = 1
     var plus = 3
-    var len = (log10(sqr.toDouble())).toInt() + 1
+    var len = if (sqr != 0) (log10(sqr.toDouble())).toInt() + 1 else 1
 
     while (n > kvo + len) {
         kvo += len
         sqr += plus
         plus += 2
-        len = (log10(sqr.toDouble())).toInt() + 1
+        len = if (sqr != 0) (log10(sqr.toDouble())).toInt() + 1 else 1
     }
     return sqr / 10.0.pow(((kvo + len) - n).toInt()).toInt() % 10
 

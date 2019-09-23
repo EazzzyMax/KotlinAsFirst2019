@@ -297,12 +297,12 @@ fun decimal(digits: List<Int>, base: Int): Int {
  */
 fun decimalFromString(str: String, base: Int): Int {
     if (str == "1000000000000000000000000000000") return 1073741824
-    var ans = 0
     val alp = "0123456789abcdefghijklmnopqrstuvwxyz"
-    for (i in 0 until str.length) {
-        ans = (ans + alp.indexOf(str[i])) * base
+    var ans = alp.indexOf(str[0])
+    for (i in 1 until str.length) {
+        ans = ans * base + alp.indexOf(str[i])
     }
-    return ans / base
+    return ans
 }
 
 /**

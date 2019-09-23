@@ -292,15 +292,12 @@ fun squareSequenceDigit(n: Int): Int {
     var kvo = 0
     var sqr = 1
     var plus = 3
-    var len = if (sqr != 0) (log10(sqr.toDouble())).toInt() + 1 else 1
-
-    while (n > kvo + len) {
-        kvo += len
+    while (n > kvo + (log10(sqr.toDouble())).toInt() + 1) {
+        kvo += (log10(sqr.toDouble())).toInt() + 1
         sqr += plus
         plus += 2
-        len = if (sqr != 0) (log10(sqr.toDouble())).toInt() + 1 else 1
     }
-    return sqr / 10.0.pow(((kvo + len) - n).toInt()).toInt() % 10
+    return sqr / 10.0.pow(kvo + (log10(sqr.toDouble())).toInt() + 1 - n).toInt() % 10
 
 }
 
@@ -322,7 +319,5 @@ fun fibSequenceDigit(n: Int): Int {
         number++
         len = (log10(fib(number).toDouble())).toInt() + 1
     }
-    return (fib(number) / 10.0.pow(n = (kvo + len - n).toInt()).toInt()) % 10
-
-
+    return (fib(number) / 10.0.pow(kvo + len - n).toInt()) % 10
 }

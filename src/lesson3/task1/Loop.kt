@@ -248,8 +248,10 @@ fun revert(n: Int): Int {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun isPalindrome(n: Int): Boolean {
-    var n1 = n
+fun isPalindrome(n: Int): Boolean = (n == revert(n))
+
+
+    /** var n1 = n
     while (true) {
         val len = if (n1 != 0) (log10(n1.toDouble())).toInt() + 1 else 1
         if (len == 1) return true
@@ -259,8 +261,8 @@ fun isPalindrome(n: Int): Boolean {
         if ((n1 / 10.0.pow(len - 1)).toInt() == n1 % 10) n1 = (n1 % 10.0.pow(len - 1)).toInt() / 10
         else return false
     }
+    */
 
-}
 
 /**
  * Средняя

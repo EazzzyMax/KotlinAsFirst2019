@@ -111,7 +111,7 @@ fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
  *   containsIn(mapOf("a" to "z"), mapOf("a" to "zee", "b" to "sweet")) -> false
  */
 fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean {
-    for ((key, value) in a) {
+    for ((key) in a) {
         if (a[key] != b[key]) return false
     }
     return true
@@ -132,7 +132,7 @@ fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean {
  *     -> a changes to mutableMapOf() aka becomes empty
  */
 fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>): Unit {
-    for ((key, value) in b) {
+    for ((key) in b) {
         if (a[key] == b[key]) {
             a.remove(key)
         }
@@ -176,10 +176,10 @@ fun whoAreInBoth(a: List<String>, b: List<String>): List<String> {
 fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<String, String> {
     val newlist = mutableMapOf<String, String>()
 
-    for ((name, number) in mapA) {
+    for ((name) in mapA) {
         newlist[name] = newlist.getOrDefault(name, String()) + mapA[name]
     }
-    for ((name, number) in mapB) {
+    for ((name) in mapB) {
         if (name !in newlist) {
             newlist[name] = newlist.getOrDefault(name, String()) + mapB[name]
         } else if (mapB[name] != mapA[name]) {

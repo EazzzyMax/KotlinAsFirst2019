@@ -204,7 +204,7 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
     val first = mutableMapOf<String, List<Double>>()
     val second = mutableMapOf<String, Double>()
     for (pair1 in stockPrices) first[pair1.first] = first.getOrDefault(pair1.first, listOf()) + pair1.second
-    for ((key, price) in first) second[key] =
+    for ((key) in first) second[key] =
         second.getOrDefault(key, 0.0) + first.getOrDefault(key, listOf()).sum() / first.getOrDefault(key, listOf()).size
     return second
 }
@@ -224,7 +224,17 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
  *     "печенье"
  *   ) -> "Мария"
  */
-fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? = TODO()
+fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? {
+    var minprice = Double.MAX_VALUE
+    var ansname = ""
+    for ((name, pairnow) in stuff) {
+        if ((pairnow.first == kind) and (pairnow.second <= minprice)) {
+            minprice = pairnow.second
+            ansname = name
+        }
+    }
+    return if (ansname != "") ansname else null
+}
 
 /**
  * Средняя
@@ -235,7 +245,12 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  * Например:
  *   canBuildFrom(listOf('a', 'b', 'o'), "baobab") -> true
  */
-fun canBuildFrom(chars: List<Char>, word: String): Boolean = TODO()
+fun canBuildFrom(chars: List<Char>, word: String): Boolean {
+    for (charnow in word) {
+        if (charnow !in chars) return false
+    }
+    return true
+}
 
 /**
  * Средняя
@@ -249,7 +264,14 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean = TODO()
  * Например:
  *   extractRepeats(listOf("a", "b", "a")) -> mapOf("a" to 2)
  */
-fun extractRepeats(list: List<String>): Map<String, Int> = TODO()
+fun extractRepeats(list: List<String>): Map<String, Int> {
+    val ans = mutableMapOf<String, Int>()
+    for (key in list) {
+        ans[key] = ans.getOrDefault(key, 0) + 1
+    }
+
+    return ans.filter { it.value != 1 }
+}
 
 /**
  * Средняя
@@ -260,7 +282,21 @@ fun extractRepeats(list: List<String>): Map<String, Int> = TODO()
  * Например:
  *   hasAnagrams(listOf("тор", "свет", "рот")) -> true
  */
-fun hasAnagrams(words: List<String>): Boolean = TODO()
+fun hasAnagrams(words: List<String>): Boolean {
+    for (i in 0 until words.size - 1) {
+        val map = mutableMapOf<Char, Int>()
+        for (charr in words[i]) map[charr] = map.getOrDefault(charr, 0) + 1
+
+        for (j in i + 1 until words.size) {
+            val map1 = mutableMapOf<Char, Int>()
+            for (charr in words[j]) map1[charr] = map1.getOrDefault(charr, 0) + 1
+            for ((key) in map) {
+                if (map == map1) return true
+            }
+        }
+    }
+    return false
+}
 
 /**
  * Сложная

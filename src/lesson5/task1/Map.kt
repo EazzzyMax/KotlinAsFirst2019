@@ -328,31 +328,31 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
         all += left
         all += right
     }
-
     val answer = mutableMapOf<String, Set<String>>()
     for ((left, right) in friends) {
-        val allfriends = mutableSetOf<String>() //то что верну в answer[left]
-        val afriends = mutableSetOf<String>()   //друзья, чьих друзей я добавил. к ним я больше не обращаюсь
-        val bfriends = mutableSetOf<String>()   //друзья, чьих друзей я еще НЕ добавил.
-        bfriends += right
-        while (bfriends.size != 0) {
-            afriends += bfriends
-            for (name in bfriends) {
-                bfriends += friends[name] ?: setOf()
+        if (right.isNotEmpty()) {
+            val allfriends = mutableSetOf<String>() //то что верну в answer[left]
+            val afriends = mutableSetOf<String>()   //друзья, чьих друзей я добавил. к ним я больше не обращаюсь
+            val bfriends = mutableSetOf<String>()   //друзья, чьих друзей я еще НЕ добавил.
+            bfriends += right
+            while (bfriends.size != 0) {
+                afriends += bfriends
+                val cfriends = bfriends
+                for (name in cfriends) {
+                    bfriends += friends[name] ?: setOf()
+                }
+                allfriends += bfriends
+                bfriends.removeAll(afriends)
             }
-            allfriends += bfriends
-            bfriends.removeAll(afriends)
-        }
-        allfriends.remove(left)
-        answer[left] = allfriends
-    }
+            allfriends.remove(left)
+            answer[left] = allfriends
+        } else answer[left] = setOf<String>()
 
+    }
     for (z in all) {
         answer[z] = answer.getOrDefault(z, setOf())
     }
-
     return answer
-
 }
 
 /**
@@ -372,7 +372,34 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  *   findSumOfTwo(listOf(1, 2, 3), 4) -> Pair(0, 2)
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
-fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> = TODO()
+fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
+    if (list.max()!! * 2 < number) return -1 to -1
+    if (list.min()!! * 2 > number) return -1 to -1
+
+    var newlist = mutableListOf<Int>()
+    newlist = list.toMutableList()
+
+    //проверяю не состоит ли number из двух равных чисел, чтобы дальше работать с множествами
+    if (number % 2 == 0) {
+        var i = 0
+        if (number / 2 in newlist) {
+            i = newlist.indexOf(number / 2)
+            newlist.remove(newlist.indexOf(number / 2))
+        }
+        if (number / 2 in newlist) return i to newlist.indexOf(number / 2) + 1
+    }
+
+    //убираю слишком большие или слишком малые значения
+    if (list.min()!! + list.max()!! > number) {
+        for (i in 0 until list.size) if (list[i] + list.min()!! > number) newlist.remove(i)
+    } else if (list.min()!! + list.max()!! < number) {
+        for (i in 0 until list.size) if (list[i] + list.max()!! < number) newlist.remove(i)
+    }
+
+    //разделяю список на 10 списков (внутри map) в замисимости от последней цифры.
+    val frag = mutableMapOf<Int, Set<Int>>()
+    return 1 to 1
+}
 
 /**
  * Очень сложная

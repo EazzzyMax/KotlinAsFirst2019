@@ -283,6 +283,7 @@ fun extractRepeats(list: List<String>): Map<String, Int> {
  *   hasAnagrams(listOf("тор", "свет", "рот")) -> true
  */
 fun hasAnagrams(words: List<String>): Boolean {
+    if (words.size == 1) return false
     if (words[0] == words[1]) return true
     for (i in 0 until words.size - 1) {
         val map = mutableMapOf<Char, Int>()

@@ -292,9 +292,7 @@ fun hasAnagrams(words: List<String>): Boolean {
             if (words[i] == words[j]) return true
             val map1 = mutableMapOf<Char, Int>()
             for (charr in words[j]) map1[charr] = map1.getOrDefault(charr, 0) + 1
-            for ((key) in map) {
-                if (map == map1) return true
-            }
+            if (map == map1) return true
         }
     }
     return false
@@ -324,7 +322,38 @@ fun hasAnagrams(words: List<String>): Boolean {
  *          "Mikhail" to setOf("Sveta", "Marat")
  *        )
  */
-fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> = TODO()
+fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> {
+    val all = mutableSetOf<String>()
+    for ((left, right) in friends) {
+        all += left
+        all += right
+    }
+
+    val answer = mutableMapOf<String, Set<String>>()
+    for ((left, right) in friends) {
+        val allfriends = mutableSetOf<String>() //то что верну в answer[left]
+        val afriends = mutableSetOf<String>()   //друзья, чьих друзей я добавил. к ним я больше не обращаюсь
+        val bfriends = mutableSetOf<String>()   //друзья, чьих друзей я еще НЕ добавил.
+        bfriends += right
+        while (bfriends.size != 0) {
+            afriends += bfriends
+            for (name in bfriends) {
+                bfriends += friends[name] ?: setOf()
+            }
+            allfriends += bfriends
+            bfriends.removeAll(afriends)
+        }
+        allfriends.remove(left)
+        answer[left] = allfriends
+    }
+
+    for (z in all) {
+        answer[z] = answer.getOrDefault(z, setOf())
+    }
+
+    return answer
+
+}
 
 /**
  * Сложная

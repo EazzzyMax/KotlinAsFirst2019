@@ -342,7 +342,7 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
             }
             bfriends += allfriends
             bfriends.removeAll(afriends)
-    }
+        }
         allfriends.remove(left)
         answer[left] = allfriends
 
@@ -372,11 +372,11 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
+    if (list.size < 2) return -1 to -1
     if (list.max()!! * 2 < number) return -1 to -1
     if (list.min()!! * 2 > number) return -1 to -1
 
-    var newlist = mutableListOf<Int>()
-    newlist = list.toMutableList()
+    val newlist = list.toMutableList() //что бы можно было удалить элемент в следующем алгоритме
 
     //проверяю не состоит ли number из двух равных чисел, чтобы дальше работать с множествами
     if (number % 2 == 0) {
@@ -388,16 +388,23 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
         if (number / 2 in newlist) return i to newlist.indexOf(number / 2) + 1
     }
 
+    val newset = newlist.toSet().toMutableList() //лист без повторяющихся чисел
+
     //убираю слишком большие или слишком малые значения
-    if (list.min()!! + list.max()!! > number) {
-        for (i in 0 until list.size) if (list[i] + list.min()!! > number) newlist.remove(i)
-    } else if (list.min()!! + list.max()!! < number) {
-        for (i in 0 until list.size) if (list[i] + list.max()!! < number) newlist.remove(i)
+    if (newset.min()!! + newset.max()!! > number) {
+        for (i in newset) if (newset[i] + newset.min()!! > number) newset.removeAt(i)
+    } else if (newset.min()!! + newset.max()!! < number) {
+        for (i in newset) if (newset[i] + newset.max()!! < number) newset.removeAt(i)
     }
 
     //разделяю список на 10 списков (внутри map) в замисимости от последней цифры.
-    val frag = mutableMapOf<Int, Set<Int>>()
-    return 1 to 1
+    val frag = mutableMapOf<Int, List<Int>>()
+    for (i in newset) {
+        frag[i % 10] = frag.getOrDefault(i % 10, listOf()) + i
+    }
+
+    val q = frag[0]
+
 }
 
 /**

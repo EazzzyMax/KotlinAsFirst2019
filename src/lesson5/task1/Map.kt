@@ -323,30 +323,29 @@ fun hasAnagrams(words: List<String>): Boolean {
  *        )
  */
 fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> {
-    val all = mutableSetOf<String>()
+    val all = mutableSetOf<String>() //список всех хз зачем
     for ((left, right) in friends) {
         all += left
         all += right
     }
     val answer = mutableMapOf<String, Set<String>>()
     for ((left, right) in friends) {
-        if (right.isNotEmpty()) {
-            val allfriends = mutableSetOf<String>() //то что верну в answer[left]
-            val afriends = mutableSetOf<String>()   //друзья, чьих друзей я добавил. к ним я больше не обращаюсь
-            val bfriends = mutableSetOf<String>()   //друзья, чьих друзей я еще НЕ добавил.
-            bfriends += right
-            while (bfriends.size != 0) {
-                afriends += bfriends
-                val cfriends = bfriends
-                for (name in cfriends) {
-                    bfriends += friends[name] ?: setOf()
-                }
-                allfriends += bfriends
-                bfriends.removeAll(afriends)
+        val allfriends = mutableSetOf<String>() //то что верну в answer[left]
+        val afriends = mutableSetOf<String>() //ОБСЛЕДОВАННЫЕ друзья, чьих друзей я добавил. к ним я больше не обращаюсь
+        val bfriends = mutableSetOf<String>() //НЕОБСЛЕДОВАННЫЕ друзья, чьих друзей я еще НЕ добавил.
+        bfriends += right
+        allfriends += right
+        while (bfriends.size != 0) {
+            afriends += bfriends
+            for (name in bfriends) {
+                allfriends += friends[name] ?: setOf()
             }
-            allfriends.remove(left)
-            answer[left] = allfriends
-        } else answer[left] = setOf<String>()
+            bfriends += allfriends
+            bfriends.removeAll(afriends)
+    }
+        allfriends.remove(left)
+        answer[left] = allfriends
+
 
     }
     for (z in all) {

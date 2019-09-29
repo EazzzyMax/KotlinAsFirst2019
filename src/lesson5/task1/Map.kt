@@ -398,13 +398,40 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
     }
 
     //разделяю список на 10 списков (внутри map) в замисимости от последней цифры.
-    val frag = mutableMapOf<Int, List<Int>>()
+    val frag = mutableMapOf<Int, Set<Int>>() //                                      !!!!! -> frag <- !!!!!
     for (i in newset) {
-        frag[i % 10] = frag.getOrDefault(i % 10, listOf()) + i
+        frag[i % 10] = frag.getOrDefault(i % 10, setOf()) + i
     }
 
-    val q = frag[0]
-
+    //дикий сука перебор (((
+    val lastnum = number % 10
+    if (lastnum % 2 == 0) { // для 0 2 4 6 8
+        for (i in lastnum / 2 + 1..lastnum / 2 + 4) { //перебор левых i. j - его пара
+            val j = (10 + lastnum - i) % 10
+            for (left in frag[i] ?: listOf()) {    //перебираю все что заканчиваются на i
+                if (number - left in frag[j] ?: listOf()) { //нет ли в парном списке frag[j] того что вместе даст number
+                    val ans1 = list.indexOf(left)
+                    val ans2 = list.indexOf(number - left)
+                    return ans1 to ans2
+                }
+            }
+        }
+        for (left in frag[lastnum / 2] ?: listOf()) {
+            if (number - left in frag[lastnum / 2] ?: listOf()) { //нет ли в frag[j] того что вместе даст number
+                val ans1 = list.indexOf(left)
+                val ans2 = list.indexOf(number - left)
+                return ans1 to ans2
+            }
+        }
+        for (left in frag[(lastnum + 10) / 2] ?: listOf()) {
+            if (number - left in frag[(lastnum + 10) / 2] ?: listOf()) { //нет ли в frag[j] того что вместе даст number
+                val ans1 = list.indexOf(left)
+                val ans2 = list.indexOf(number - left)
+                return ans1 to ans2
+            }
+        }
+    }
+    return -1 to -1
 }
 
 /**

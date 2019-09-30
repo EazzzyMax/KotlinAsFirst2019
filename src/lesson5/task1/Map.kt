@@ -376,14 +376,14 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
     if (list.max()!! * 2 < number) return -1 to -1
     if (list.min()!! * 2 > number) return -1 to -1
 
-    val newlist = list.toMutableList() //что бы можно было удалить элемент в следующем алгоритме
+    val newlist = list.toMutableList() //что бы можно было удалить элемент в слеEEдующем алгоритме
 
     //проверяю не состоит ли number из двух равных чисел, чтобы дальше работать с множествами
     if (number % 2 == 0) {
         var i = 0
         if (number / 2 in newlist) {
-            i = newlist.indexOf(number / 2)
-            newlist.remove(newlist.indexOf(number / 2))
+            i = list.indexOf(number / 2)
+            newlist.remove(number / 2)
         }
         if (number / 2 in newlist) return i to newlist.indexOf(number / 2) + 1
     }
@@ -392,9 +392,9 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
 
     //убираю слишком большие или слишком малые значения
     if (newset.min()!! + newset.max()!! > number) {
-        for (i in newset) if (newset[i] + newset.min()!! > number) newset.removeAt(i)
+        for (i in newlist.toSet()) if (i + newset.min()!! > number) newset.remove(i)
     } else if (newset.min()!! + newset.max()!! < number) {
-        for (i in newset) if (newset[i] + newset.max()!! < number) newset.removeAt(i)
+        for (i in newlist.toSet()) if (i + newset.max()!! < number) newset.remove(i)
     }
 
     //разделяю список на 10 списков (внутри map) в замисимости от последней цифры.
@@ -408,28 +408,40 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
     if (lastnum % 2 == 0) { // для 0 2 4 6 8
         for (i in lastnum / 2 + 1..lastnum / 2 + 4) { //перебор левых i. j - его пара
             val j = (10 + lastnum - i) % 10
-            for (left in frag[i] ?: listOf()) {    //перебираю все что заканчиваются на i
-                if (number - left in frag[j] ?: listOf()) { //нет ли в парном списке frag[j] того что вместе даст number
+            for (left in frag[i] ?: setOf()) {    //перебираю все что заканчиваются на i
+                if (number - left in frag[j] ?: setOf()) { //нет ли в парном списке frag[j] того что вместе даст number
+                    val ans1 = list.indexOf(left)
+                    val ans2 = list.indexOf(number - left)
+                    return if (ans1 < ans2) ans1 to ans2 else ans2 to ans1
+                }
+            }
+        }
+        for (left in frag[lastnum / 2] ?: setOf()) {
+            if (number - left in frag[lastnum / 2] ?: setOf()) { //нет ли в frag[j] того что вместе даст number
+                val ans1 = list.indexOf(left)
+                val ans2 = list.indexOf(number - left)
+                return ans1 to ans2
+            }
+        }
+        for (left in frag[(lastnum + 10) / 2] ?: setOf()) {
+            if (number - left in frag[(lastnum + 10) / 2] ?: setOf()) { //нет ли в frag[j] того что вместе даст number
+                val ans1 = list.indexOf(left)
+                val ans2 = list.indexOf(number - left)
+                return ans1 to ans2
+            }
+        }
+    } else {   //для 1 3 5 7 9
+        for (i in lastnum / 2 + 1..lastnum / 2 + 5) { //перебор левых i. j - его пара
+            val j = (10 + lastnum - i) % 10
+            for (left in frag[i] ?: setOf()) {    //перебираю все что заканчиваются на i
+                if (number - left in frag[j] ?: setOf()) { //нет ли в парном списке frag[j] того что вместе даст number
                     val ans1 = list.indexOf(left)
                     val ans2 = list.indexOf(number - left)
                     return ans1 to ans2
                 }
             }
         }
-        for (left in frag[lastnum / 2] ?: listOf()) {
-            if (number - left in frag[lastnum / 2] ?: listOf()) { //нет ли в frag[j] того что вместе даст number
-                val ans1 = list.indexOf(left)
-                val ans2 = list.indexOf(number - left)
-                return ans1 to ans2
-            }
-        }
-        for (left in frag[(lastnum + 10) / 2] ?: listOf()) {
-            if (number - left in frag[(lastnum + 10) / 2] ?: listOf()) { //нет ли в frag[j] того что вместе даст number
-                val ans1 = list.indexOf(left)
-                val ans2 = list.indexOf(number - left)
-                return ans1 to ans2
-            }
-        }
+
     }
     return -1 to -1
 }

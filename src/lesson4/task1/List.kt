@@ -133,11 +133,7 @@ fun mean(list: List<Double>): Double = if (list.isNotEmpty()) list.sum() / list.
  *
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
-fun center(list: MutableList<Double>): MutableList<Double> {
-    val mean = mean(list)
-    for (i in 0 until list.size) list[i] -= mean
-    return list
-}
+fun center(list: MutableList<Double>): MutableList<Double> = (list.map { it - mean(list) }).toMutableList()
 
 /**
  * Средняя
@@ -253,19 +249,13 @@ fun convert(n: Int, base: Int): List<Int> {
  * (например, n.toString(base) и подобные), запрещается.
  */
 fun convertToString(n: Int, base: Int): String {
-    var alp = "abcdefghijklmnopqrstuvwxyz"
-    val list = mutableListOf<String>()
-    var n1 = n
-    while (n1 >= base) {
-        if ((n1 % base) <= 9) list.add((n1 % base).toString())
-        else list.add((alp[(n1 % base) - 10]).toString())
-        n1 /= base
-    }
-    if ((n1 % base) <= 9) list.add((n1 % base).toString())
-    else list.add((alp[(n1 % base) - 10]).toString())
-    list.reverse()
-    alp = list.joinToString(separator = "")
-    return alp
+    // a = 97 = 10 = 97-87
+    //10. 10+87=97. 97.toChar() = a
+    fun tochar(n: Int): String = if (n > 9) (n + 87).toChar().toString() else n.toString()
+
+    val list = convert(n, base)
+    val newlist = list.map { it -> tochar(it) }
+    return newlist.joinToString(separator = "")
 }
 
 /**
@@ -296,13 +286,14 @@ fun decimal(digits: List<Int>, base: Int): Int {
  * (например, str.toInt(base)), запрещается.
  */
 fun decimalFromString(str: String, base: Int): Int {
-    if (str == "1000000000000000000000000000000") return 1073741824
     val alp = "0123456789abcdefghijklmnopqrstuvwxyz"
     var ans = alp.indexOf(str[0])
     for (i in 1 until str.length) {
         ans = ans * base + alp.indexOf(str[i])
     }
     return ans
+
+
 }
 
 /**

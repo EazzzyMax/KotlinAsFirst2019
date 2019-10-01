@@ -131,7 +131,7 @@ fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean {
  *   subtractOf(a = mutableMapOf("a" to "z"), mapOf("a" to "z"))
  *     -> a changes to mutableMapOf() aka becomes empty
  */
-fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>): Unit {
+fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>) {
     for ((key) in b) {
         if (a[key] == b[key]) {
             a.remove(key)
@@ -403,7 +403,7 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
         frag[i % 10] = frag.getOrDefault(i % 10, setOf()) + i
     }
 
-    //дикий сука перебор (((
+    // перебор
     val lastnum = number % 10
     if (lastnum % 2 == 0) { // для 0 2 4 6 8
         for (i in lastnum / 2 + 1..lastnum / 2 + 4) { //перебор левых i. j - его пара

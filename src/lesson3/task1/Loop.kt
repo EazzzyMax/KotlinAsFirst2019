@@ -100,7 +100,7 @@ fun fib(n: Int): Int {
 fun lcm(m: Int, n: Int): Int {
     var m1 = m
     var n1 = n
-    while ((m1 != 0) and (n1 != 0)) {
+    while ((m1 != 0) && (n1 != 0)) {
         if (m1 > n1) m1 %= n1
         else n1 %= m1
     }

@@ -100,7 +100,7 @@ fun fib(n: Int): Int {
 fun lcm(m: Int, n: Int): Int {
     var m1 = m
     var n1 = n
-    while ((m1 != 0) && (n1 != 0)) {
+    while ((m1 != 0) and (n1 != 0)) {
         if (m1 > n1) m1 %= n1
         else n1 %= m1
     }
@@ -150,7 +150,7 @@ fun isCoPrime(m: Int, n: Int): Boolean {
 fun squareBetweenExists(m: Int, n: Int): Boolean {
     var m1 = sqrt(m.toDouble())
     if (m1 % 1 == 0.0) m1.toInt()
-    else m1 = m1 - m1 % 1 + 1
+    else m1 = ceil(m1)
     return m1 <= sqrt(n.toDouble())
 }
 
@@ -259,7 +259,6 @@ fun revert(n: Int): Int {
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun isPalindrome(n: Int): Boolean = (n == revert(n))
-
 
 /**
  * Средняя

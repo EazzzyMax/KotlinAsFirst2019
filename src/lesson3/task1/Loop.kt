@@ -4,6 +4,7 @@ package lesson3.task1
 
 import kotlin.math.*
 
+fun answer1(digit: Int, kvo: Int, len: Int, n: Int): Int = (digit / 10.0.pow(kvo + len - n).toInt()) % 10
 /**
  * Пример
  *
@@ -99,7 +100,7 @@ fun fib(n: Int): Int {
 fun lcm(m: Int, n: Int): Int {
     var m1 = m
     var n1 = n
-    while ((m1 != 0) and (n1 != 0)) {
+    while ((m1 != 0) && (n1 != 0)) {
         if (m1 > n1) m1 %= n1
         else n1 %= m1
     }
@@ -220,7 +221,16 @@ fun sin(x: Double, eps: Double): Double {
  * Подумайте, как добиться более быстрой сходимости ряда при больших значениях x.
  * Использовать kotlin.math.cos и другие стандартные реализации функции косинуса в этой задаче запрещается.
  */
-fun cos(x: Double, eps: Double): Double = TODO()
+fun cos(x: Double, eps: Double): Double {
+    var digitsin = sin(x, eps / 1000)
+
+    println(digitsin)
+    if (digitsin > 1) digitsin = 1.0
+    else if (digitsin < -1) digitsin = -1.0
+    return if ((x % 2 * PI in -3.0 / 2.0 * PI..-1.0 / 2.0 * PI) || (x % 2 * PI in 1.0 / 2.0 * PI..3.0 / 2.0 * PI)) {
+        -sqrt(1 - digitsin.pow(2))
+    } else sqrt(1 - digitsin.pow(2))
+}
 
 /**
  * Средняя
@@ -249,19 +259,6 @@ fun revert(n: Int): Int {
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun isPalindrome(n: Int): Boolean = (n == revert(n))
-
-
-    /** var n1 = n
-    while (true) {
-        val len = if (n1 != 0) (log10(n1.toDouble())).toInt() + 1 else 1
-        if (len == 1) return true
-        if (len == 2) {
-            return n1 % 10 == n1 / 10
-        }
-        if ((n1 / 10.0.pow(len - 1)).toInt() == n1 % 10) n1 = (n1 % 10.0.pow(len - 1)).toInt() / 10
-        else return false
-    }
-    */
 
 
 /**
@@ -293,12 +290,14 @@ fun squareSequenceDigit(n: Int): Int {
     var kvo = 0
     var sqr = 1
     var plus = 3
-    while (n > kvo + (log10(sqr.toDouble())).toInt() + 1) {
-        kvo += (log10(sqr.toDouble())).toInt() + 1
+    var len = (log10(sqr.toDouble())).toInt() + 1
+    while (n > kvo + len) {
+        kvo += len
         sqr += plus
         plus += 2
+        len = (log10(sqr.toDouble())).toInt() + 1
     }
-    return sqr / 10.0.pow(kvo + (log10(sqr.toDouble())).toInt() + 1 - n).toInt() % 10
+    return answer1(sqr, kvo, len, n)
 
 }
 
@@ -320,5 +319,5 @@ fun fibSequenceDigit(n: Int): Int {
         number++
         len = (log10(fib(number).toDouble())).toInt() + 1
     }
-    return (fib(number) / 10.0.pow(kvo + len - n).toInt()) % 10
+    return answer1(fib(number), kvo, len, n)
 }

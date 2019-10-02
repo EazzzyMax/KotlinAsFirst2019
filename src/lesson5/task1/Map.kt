@@ -147,13 +147,13 @@ fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>) {
  * т. е. whoAreInBoth(listOf("Марат", "Семён, "Марат"), listOf("Марат", "Марат")) == listOf("Марат")
  */
 fun whoAreInBoth(a: List<String>, b: List<String>): List<String> {
-    val set = mutableSetOf<String>()
+    val answer = mutableSetOf<String>()
     for (name in a) {
         if (name in b) {
-            set += name
+            answer += name
         }
     }
-    return set.toList()
+    return answer.toList()
 }
 
 /**
@@ -174,19 +174,19 @@ fun whoAreInBoth(a: List<String>, b: List<String>): List<String> {
  *   ) -> mapOf("Emergency" to "112, 911", "Police" to "02")
  */
 fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<String, String> {
-    val newlist = mutableMapOf<String, String>()
+    val newList = mutableMapOf<String, String>()
 
     for ((name) in mapA) {
-        newlist[name] = newlist.getOrDefault(name, String()) + mapA[name]
+        newList[name] = newList.getOrDefault(name, String()) + mapA[name]
     }
     for ((name) in mapB) {
-        if (name !in newlist) {
-            newlist[name] = newlist.getOrDefault(name, String()) + mapB[name]
+        if (name !in newList) {
+            newList[name] = newList.getOrDefault(name, String()) + mapB[name]
         } else if (mapB[name] != mapA[name]) {
-            newlist[name] = newlist.getOrDefault(name, String()) + ", " + mapB[name]
+            newList[name] = newList.getOrDefault(name, String()) + ", " + mapB[name]
         }
     }
-    return newlist
+    return newList
 }
 
 
@@ -201,11 +201,14 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
  *     -> mapOf("MSFT" to 150.0, "NFLX" to 40.0)
  */
 fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> {
-    val first = mutableMapOf<String, List<Double>>()
-    val second = mutableMapOf<String, Double>()
-    for ((first1, second1) in stockPrices) first[first1] = first.getOrDefault(first1, listOf()) + second1
-    for ((key) in first) second[key] =
-        second.getOrDefault(key, 0.0) + first.getOrDefault(key, listOf()).sum() / first.getOrDefault(key, listOf()).size
+    val first = mutableMapOf<String, List<Double>>() //все цены
+    val second = mutableMapOf<String, Double>() //усредненные
+    for ((first1, second1) in stockPrices) {
+        first[first1] = first.getOrDefault(first1, listOf()) + second1
+    }
+    for ((key) in first) {
+        second[key] = first.getOrDefault(key, listOf()).sum() / first.getOrDefault(key, listOf()).size
+    }
     return second
 }
 
@@ -226,14 +229,15 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
  */
 fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? {
     var minprice = Double.MAX_VALUE
-    var ansname = "-1"
+    var ansname: String?
+    ansname = null
     for ((name, pairnow) in stuff) {
         if ((pairnow.first == kind) && (pairnow.second <= minprice)) {
             minprice = pairnow.second
             ansname = name
         }
     }
-    return if (ansname != "-1") ansname else null
+    return ansname
 }
 
 /**

@@ -133,7 +133,11 @@ fun mean(list: List<Double>): Double = if (list.isNotEmpty()) list.sum() / list.
  *
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
-fun center(list: MutableList<Double>): MutableList<Double> = (list.map { it - mean(list) }).toMutableList()
+fun center(list: MutableList<Double>): List<Double> {
+    val mean = mean(list)
+    for (i in 0 until list.size) list[i] -= mean
+    return list
+}
 
 /**
  * Средняя
@@ -286,10 +290,15 @@ fun decimal(digits: List<Int>, base: Int): Int {
  * (например, str.toInt(base)), запрещается.
  */
 fun decimalFromString(str: String, base: Int): Int {
-    val alp = "0123456789abcdefghijklmnopqrstuvwxyz"
-    var ans = alp.indexOf(str[0])
-    for (i in 1 until str.length) {
-        ans = ans * base + alp.indexOf(str[i])
+    //0 = 48
+    val list = mutableListOf<Int>()
+    for (i in str) {
+        if (i.toInt() in 48..57) list.add(i.toInt() - 48)
+        else list.add(i.toInt() - 87)
+    }
+    var ans = list[0]
+    for (i in 1 until list.size) {
+        ans = ans * base + list[i]
     }
     return ans
 
@@ -298,7 +307,7 @@ fun decimalFromString(str: String, base: Int): Int {
 
 /**
  * Сложная
- *                                                          1000=M    500=D    100=C    50=L    10=X    5=V    1=I
+ *                                             1000=M 900=CM 500=D 400=CD 100=C 90=XC 50=L 40=LX 10=X 9=IX 5=V 4=IV 1=I
  * Перевести натуральное число n > 0 в римскую систему.
  * Римские цифры: 1 = I, 4 = IV, 5 = V, 9 = IX, 10 = X, 40 = XL, 50 = L,
  * 90 = XC, 100 = C, 400 = CD, 500 = D, 900 = CM, 1000 = M.
@@ -307,57 +316,26 @@ fun decimalFromString(str: String, base: Int): Int {
 fun roman(n: Int): String {
     var n1 = n
     var str = ""
-    while (n1 >= 1000) {
-        n1 -= 1000
-        str += "M"
-    }
-    while (n1 >= 900) {
-        n1 -= 900
-        str += "CM"
-    }
-    while (n1 >= 500) {
-        n1 -= 500
-        str += "D"
-    }
-    while (n1 >= 400) {
-        n1 -= 400
-        str += "CD"
-    }
-    while (n1 >= 100) {
-        n1 -= 100
-        str += "C"
-    }
-    while (n1 >= 90) {
-        n1 -= 90
-        str += "XC"
-    }
-    while (n1 >= 50) {
-        n1 -= 50
-        str += "L"
-    }
-    while (n1 >= 40) {
-        n1 -= 40
-        str += "XL"
-    }
-    while (n1 >= 10) {
-        n1 -= 10
-        str += "X"
-    }
-    while (n1 >= 9) {
-        n1 -= 9
-        str += "IX"
-    }
-    while (n1 >= 5) {
-        n1 -= 5
-        str += "V"
-    }
-    while (n1 >= 4) {
-        n1 -= 4
-        str += "IV"
-    }
-    while (n1 >= 1) {
-        n1 -= 1
-        str += "I"
+    val list = mapOf(
+        1000 to "M",
+        900 to "CM",
+        500 to "D",
+        400 to "CD",
+        100 to "C",
+        90 to "XC",
+        50 to "L",
+        40 to "XL",
+        10 to "X",
+        9 to "IX",
+        5 to "V",
+        4 to "IV",
+        1 to "I"
+    )
+    for ((left, right) in list) {
+        for (i in 1..n1 / left) {
+            str += right
+        }
+        n1 %= left
     }
     return str
 }

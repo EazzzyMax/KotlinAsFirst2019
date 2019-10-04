@@ -215,6 +215,7 @@ fun flattenPhoneNumber(phone: String): String {
     val plus = phonelist.indexOf('+')
     if (plus != 0 && plus != -1) return ""                     //стоит первым
     if (plus != phonelist.lastIndexOf('+')) return ""          //нет второго
+    if (plus == 0 && (phonelist.filter { it != '(' && it != ')' }).size == 1) return ""
 
     return (phonelist.filter { it != '(' && it != ')' }).joinToString(separator = "")
 }
@@ -269,11 +270,21 @@ fun bestHighJump(jumps: String): Int {
 
     val list1 = mutableListOf<String>()
 
-    for (i in 0 until list0.size / 2) {  //создаю лист с успешными прыжками, !!!но мб длинна некорректна!!!
+    for (i in 0 until list0.size / 2) {  //создаю лист с успешными прыжками, !!!но мб длина некорректна!!!
         if ("+" in list0[2 * i + 1])
             list1.add(list0[2 * i])
     }
-    return 11
+
+    var maxx = -1
+
+    for (i in list1) {
+        try {
+            if (i.toInt() > maxx) maxx = i.toInt()
+        } catch (e: NumberFormatException) {
+        }
+    }
+
+    return maxx
 }
 
 /**

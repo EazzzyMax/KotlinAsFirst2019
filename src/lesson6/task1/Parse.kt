@@ -187,7 +187,37 @@ fun dateDigitToStr(digital: String): String {
  *
  * PS: Дополнительные примеры работы функции можно посмотреть в соответствующих тестах.
  */
-fun flattenPhoneNumber(phone: String): String = TODO()
+fun flattenPhoneNumber(phone: String): String {
+    var phonelist = mutableListOf<Char>()
+    val notTrash = listOf('1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '+', '(', ')', ' ', '-')
+    val motTrash = listOf('1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '+', '(', ')')
+
+    for (i in phone) { //првоеряю "легален" ли номер и удаляю лишнее
+        if (i !in notTrash) return ""
+        if (i in motTrash) phonelist.add(i)
+    }
+
+    val left = phonelist.indexOf('(')
+    val right = phonelist.indexOf(')')
+
+    //СКОБОЧКА
+    if (left != -1) { //есть левая cкоб очка?
+        if (right == -1) return ""                             //тогда должна быть правая скоб очка
+        if (left != phonelist.lastIndexOf('(')) return ""      //левая только одна
+        if (right != phonelist.lastIndexOf(')')) return ""     //правая только одна
+        if (right - left < 2) return ""                        // между ними должно быть расстояние
+        for (i in left + 1 until right) {                      //проверка шо в скоб очке
+            if (phonelist[i] == '+') return ""
+        }
+    } else if (right != -1) return ""         //раз нет левой, то не над и правую
+
+    //ПЛЮСИКИ
+    val plus = phonelist.indexOf('+')
+    if (plus != 0 && plus != -1) return ""                                   //стоит первым
+    if (plus != phonelist.lastIndexOf('+')) return ""          //нет второго
+
+    return (phonelist.filter { it != '(' && it != ')' }).joinToString(separator = "")
+}
 
 /**
  * Средняя

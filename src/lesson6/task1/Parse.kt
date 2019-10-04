@@ -188,7 +188,7 @@ fun dateDigitToStr(digital: String): String {
  * PS: Дополнительные примеры работы функции можно посмотреть в соответствующих тестах.
  */
 fun flattenPhoneNumber(phone: String): String {
-    var phonelist = mutableListOf<Char>()
+    val phonelist = mutableListOf<Char>()
     val notTrash = listOf('1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '+', '(', ')', ' ', '-')
     val motTrash = listOf('1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '+', '(', ')')
 
@@ -213,7 +213,7 @@ fun flattenPhoneNumber(phone: String): String {
 
     //ПЛЮСИКИ
     val plus = phonelist.indexOf('+')
-    if (plus != 0 && plus != -1) return ""                                   //стоит первым
+    if (plus != 0 && plus != -1) return ""                     //стоит первым
     if (plus != phonelist.lastIndexOf('+')) return ""          //нет второго
 
     return (phonelist.filter { it != '(' && it != ')' }).joinToString(separator = "")
@@ -229,7 +229,23 @@ fun flattenPhoneNumber(phone: String): String {
  * Прочитать строку и вернуть максимальное присутствующее в ней число (717 в примере).
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
-fun bestLongJump(jumps: String): Int = TODO()
+fun bestLongJump(jumps: String): Int {
+    val notTrash = "1234567890-% "
+    val listNotTrash = notTrash.split("")
+    val input = jumps.split(" ")
+    if (input.isEmpty()) return -1
+    val digits = mutableListOf<Int>()
+
+    for (i in input) { //все числа
+
+        try {
+            digits.add(i.toInt())
+        } catch (e: NumberFormatException) {
+            if (i !in notTrash) return -1
+        }
+    }
+    return digits.max() ?: -1
+}
 
 /**
  * Сложная

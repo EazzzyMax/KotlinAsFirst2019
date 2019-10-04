@@ -5,6 +5,13 @@ package lesson3.task1
 import kotlin.math.*
 
 fun answer1(digit: Int, kvo: Int, len: Int, n: Int): Int = (digit / 10.0.pow(kvo + len - n).toInt()) % 10
+
+fun slog(x1: Double, n: Int): Double {
+    var x2 = x1.pow(n)
+    x2 /= factorial(n)
+    return x2
+}
+
 /**
  * Пример
  *
@@ -196,17 +203,10 @@ fun collatzSteps(x: Int): Int {
  */
 fun sin(x: Double, eps: Double): Double {
     val x1 = x % (2 * PI)
-    fun slog(x1: Double, n: Int): Double {
-        var x2 = x1.pow(n)
-        x2 /= factorial(n)
-        if (n % 4 == 3) x2 *= -1
-        return x2
-    }
-
     var sum = 0.0
     var n = 1
     while (abs(slog(x1, n)) > eps) {
-        sum += slog(x1, n)
+        sum += if (n % 4 != 3) slog(x1, n) else -slog(x1, n)
         n += 2
     }
     return sum
@@ -222,14 +222,14 @@ fun sin(x: Double, eps: Double): Double {
  * Использовать kotlin.math.cos и другие стандартные реализации функции косинуса в этой задаче запрещается.
  */
 fun cos(x: Double, eps: Double): Double {
-    var digitsin = sin(x, eps / 1000)
-
-    println(digitsin)
-    if (digitsin > 1) digitsin = 1.0
-    else if (digitsin < -1) digitsin = -1.0
-    return if ((x % 2 * PI in -3.0 / 2.0 * PI..-1.0 / 2.0 * PI) || (x % 2 * PI in 1.0 / 2.0 * PI..3.0 / 2.0 * PI)) {
-        -sqrt(1 - digitsin.pow(2))
-    } else sqrt(1 - digitsin.pow(2))
+    val x1 = x % (2 * PI)
+    var sum = 0.0
+    var n = 0
+    while (abs(slog(x1, n)) > eps) {
+        sum += if ((n / 2) % 2 == 0) slog(x1, n) else -slog(x1,n)
+        n += 2
+    }
+    return sum
 }
 
 /**

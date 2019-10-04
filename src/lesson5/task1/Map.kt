@@ -207,7 +207,7 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
         first[first1] = first.getOrDefault(first1, listOf()) + second1
     }
     for ((key) in first) {
-        second[key] = first.getOrDefault(key, listOf()).sum() / first.getOrDefault(key, listOf()).size
+        second[key] = first[key]!!.sum() / first[key]!!.size
     }
     return second
 }

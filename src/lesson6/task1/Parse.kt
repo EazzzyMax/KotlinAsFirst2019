@@ -2,6 +2,8 @@
 
 package lesson6.task1
 
+import lesson2.task2.daysInMonth
+
 /**
  * Пример
  *
@@ -69,7 +71,50 @@ fun main() {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
  * входными данными.
  */
-fun dateStrToDigit(str: String): String = TODO()
+fun dateStrToDigit(str: String): String {
+    val input = str.split(" ")
+
+    if (input.size != 3) return ""
+
+    val day: Int
+    val month: Int
+    val year: Int
+    val months = listOf(
+        "января",
+        "февраля",
+        "матра",
+        "апреля",
+        "мая",
+        "июня",
+        "июля",
+        "августа",
+        "сентября",
+        "октября",
+        "ноября",
+        "декабря"
+    )
+
+    try { //формат года?
+        year = input[2].toInt()
+    } catch (e: NumberFormatException) {
+        return ""
+    }
+
+    if (input[1] in months) { //формат месяца?
+        month = months.indexOf(input[1]) + 1
+    } else return ""
+
+    val rightday = daysInMonth(month, year) //количество дней в месяце
+
+    try { //формат дня?
+        day = input[0].toInt()
+        if (day > rightday && day > 0) return ""
+    } catch (e: NumberFormatException) {
+        return ""
+    }
+
+    return String.format("%02d.%02d.%d", day, month, year)
+}
 
 /**
  * Средняя
@@ -81,7 +126,52 @@ fun dateStrToDigit(str: String): String = TODO()
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30 февраля 2009) считается неверными
  * входными данными.
  */
-fun dateDigitToStr(digital: String): String = TODO()
+fun dateDigitToStr(digital: String): String {
+    val input = digital.split(".")
+    if (input.size != 3) return ""
+
+    val day: Int
+    val month: Int
+    val year: Int
+    val months = listOf(
+        "января",
+        "февраля",
+        "матра",
+        "апреля",
+        "мая",
+        "июня",
+        "июля",
+        "августа",
+        "сентября",
+        "октября",
+        "ноября",
+        "декабря"
+    )
+
+    try {                                    //формат месяца?
+        month = input[1].toInt()
+        if (month !in 1..12) return ""
+    } catch (e: NumberFormatException) {
+        return ""
+    }
+
+    try {                                    //формат года?
+        year = input[2].toInt()
+    } catch (e: NumberFormatException) {
+        return ""
+    }
+
+    val rightday = daysInMonth(month, year)
+
+    try {                                   //формат дня?
+        day = input[0].toInt()
+        if (day > rightday && day > 0) return ""
+    } catch (e: NumberFormatException) {
+        return ""
+    }
+
+    return String.format("%d %s %d", day, months[month - 1], year)
+}
 
 /**
  * Средняя

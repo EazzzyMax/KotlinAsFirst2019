@@ -401,19 +401,6 @@ fun russian(n: Int): String {
         return string
     }
 
-    fun rus2(n: Int): String {
-        var string = ""
-
-        string += hundreds[n / 100]
-        if (n % 100 in 11..19) {
-            string += dozens1[n % 10]
-        } else {
-            string += dozens[n / 10 % 10]
-            string += units[n % 10]
-        }
-        return string
-    }
-
     fun ageDescription(age: Int): String {
         if ((age % 100 > 4) and (age % 100 < 21)) return (" тысяч")
         if (age % 10 == 1) return (" тысяча")
@@ -422,16 +409,10 @@ fun russian(n: Int): String {
     }
 
     ans += rus1(a)
-
     if (n > 999) ans += ageDescription(a)
-
     units = listOf("", " один", " два", " три", " четыре", " пять", " шесть", " семь", " восемь", " девять")
-
-
-    ans += rus2(b)
-
+    ans += rus1(b)
     if (ans.first() == ' ') ans = ans.substring(1, ans.length)
-
     return ans
 }
 

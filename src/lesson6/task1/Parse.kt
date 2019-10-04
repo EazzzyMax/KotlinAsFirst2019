@@ -230,8 +230,7 @@ fun flattenPhoneNumber(phone: String): String {
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
 fun bestLongJump(jumps: String): Int {
-    val notTrash = "1234567890-% "
-    val listNotTrash = notTrash.split("")
+    val notTrash = "-% "
     val input = jumps.split(" ")
     if (input.isEmpty()) return -1
     val digits = mutableListOf<Int>()
@@ -241,7 +240,7 @@ fun bestLongJump(jumps: String): Int {
         try {
             digits.add(i.toInt())
         } catch (e: NumberFormatException) {
-            if (i !in notTrash) return -1
+            if (i !in notTrash) return -1       //если исключение - это не число. проверка на допустимые символы
         }
     }
     return digits.max() ?: -1
@@ -258,7 +257,24 @@ fun bestLongJump(jumps: String): Int {
  * При нарушении формата входной строки, а также в случае отсутствия удачных попыток,
  * вернуть -1.
  */
-fun bestHighJump(jumps: String): Int = TODO()
+fun bestHighJump(jumps: String): Int {
+    val notTrash = "01234567890+%- "
+
+    for (i in jumps) { //на наличие левых символов
+        if (i !in notTrash) return -1
+    }
+
+    val list0 = jumps.split(" ")
+    if (list0.size % 2 != 0) return -1 //если нечетное (не будет пары)
+
+    val list1 = mutableListOf<String>()
+
+    for (i in 0 until list0.size / 2) {  //создаю лист с успешными прыжками, !!!но мб длинна некорректна!!!
+        if ("+" in list0[2 * i + 1])
+            list1.add(list0[2 * i])
+    }
+    return 11
+}
 
 /**
  * Сложная

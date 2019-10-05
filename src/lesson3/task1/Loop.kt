@@ -226,7 +226,7 @@ fun cos(x: Double, eps: Double): Double {
     var sum = 0.0
     var n = 0
     while (abs(slog(x1, n)) > eps) {
-        sum += if ((n / 2) % 2 == 0) slog(x1, n) else -slog(x1,n)
+        sum += if ((n / 2) % 2 == 0) slog(x1, n) else -slog(x1, n)
         n += 2
     }
     return sum

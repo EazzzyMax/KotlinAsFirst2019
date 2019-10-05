@@ -190,6 +190,7 @@ class Tests {
         assertEquals(-1.0, cos(PI, 1e-5), 1e-5)
         assertEquals(0.0, cos(3.0 * PI / 2.0, 1e-5), 1e-5)
         assertEquals(1.0, cos(100 * PI, 1e-5), 1e-5)
+        assertEquals(1.0, cos(-18.84955592153876, 1e-10), 1e-10)
         assertNotEquals(kotlin.math.cos(1.0), cos(1.0, 1.0))
         assertNotEquals(kotlin.math.cos(0.5), cos(-0.5, 1.0))
     }

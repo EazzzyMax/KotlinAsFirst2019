@@ -402,12 +402,28 @@ fun mostExpensive(description: String): String {
  * Вернуть -1, если roman не является корректным римским числом
  */
 fun fromRoman(roman: String): Int {
-    val str = "IVXLCDM"
+
+    val map = mapOf('M' to 1000, 'D' to 500, 'C' to 100, 'L' to 50, 'X' to 10, 'V' to 5, 'I' to 1)
 
     for (i in roman) { //легальность
-        if (i !in str) return -1
+        if (map[i] == null) return -1
     }
 
+    var answer = 0
+
+    for (i in 0 until roman.length - 1) {
+        val now = map[roman[i]]
+        val next = map[roman[i + 1]]
+
+        if ((now.toString())[0] == '1') {
+            if (next == now!! * 10 || next == now!! * 5) {
+                answer = answer - now + next
+                //тут надо пропустить след число но как?
+            } else if (next!! < now!!) {
+                answer += now
+            }
+        }
+    }
 
 }
 

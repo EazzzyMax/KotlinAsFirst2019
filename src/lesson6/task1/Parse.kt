@@ -297,8 +297,11 @@ fun bestHighJump(jumps: String): Int {
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
 fun plusMinus(expression: String): Int {
-    if (expression == "") throw IllegalArgumentException()
-    var answer: Int
+    if (expression == "") throw IllegalArgumentException()  //не пустой ли
+
+    val notTrash = "1234567890 -+"
+    for (i in expression) if (i !in notTrash) throw IllegalArgumentException()  //легальность
+
     val input = expression.split(" ")
     val a = "1234567890"
     if (input.size % 2 == 0) throw IllegalArgumentException()
@@ -311,7 +314,7 @@ fun plusMinus(expression: String): Int {
     }
 
     var n = 0
-    answer = trysumm(n)
+    var answer = trysumm(n)
     for (i in 1..(input.size - 1) / 2) {
         n = 2 * i
         when {

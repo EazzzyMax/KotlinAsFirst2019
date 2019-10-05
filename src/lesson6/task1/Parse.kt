@@ -410,22 +410,48 @@ fun fromRoman(roman: String): Int {
     }
 
     var answer = 0
+    var tumblerIXC = 0 //во избежание двух подряд на возрастание IXC
+    var tumblerVV = 0 //во избежание двух подряд V / L / D
+    var tumblerIIII = 0
 
-    for (i in 0 until roman.length - 1) {
-        val now = map[roman[i]]
-        val next = map[roman[i + 1]]
+    var now: Int
+    var next: Int
 
-        if ((now.toString())[0] == '1') {
-            if (next == now!! * 10 || next == now!! * 5) {
-                answer = answer - now + next
-                //тут надо пропустить след число но как?
-            } else if (next!! < now!!) {
+    for (i in 0 until roman.length - 1) {     //перебор попарно 0-1 1-2 2-3
+        now = map[roman[i]] ?: error("")
+        next = map[roman[i + 1]] ?: error("")
+
+        if ((now.toString())[0] == '1' && tumblerIIII < 3) {                        //1000 100 10 1
+            if (next == now * 10 || next == now * 5) {         //если этот меньше следующего в 5/10 раз (вычитание)
+                if (tumblerIXC == 1) {                           //если до этого уже шло вычитание (IX / CD) - сброс
+                    return -1
+                } else {                                         //вычитаю и активирую тумблер
+                    answer -= now
+                    tumblerIXC = 1
+                }
+            } else if (next < now) {                           //если этот больше следующего
                 answer += now
+                tumblerIXC = 0
+            } else if (next == now) {
+                answer += now
+                tumblerIIII += 1
+            } else {
+                return -1
             }
+            tumblerVV = 0
+        } else if (next < now && tumblerVV == 0) {           //5 50 500 если не шли до этого
+            answer += now
+            tumblerVV = 1
+            tumblerIIII = 0
+            tumblerIXC = 0
+        } else {                                                 //если шли до этого - сброс
+            return -1
         }
     }
-
+    answer += map[roman[roman.length - 1]] ?: error("")
+    return answer
 }
+
 
 /**
  * Очень сложная

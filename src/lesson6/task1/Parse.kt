@@ -401,7 +401,15 @@ fun mostExpensive(description: String): String {
  *
  * Вернуть -1, если roman не является корректным римским числом
  */
-fun fromRoman(roman: String): Int = TODO()
+fun fromRoman(roman: String): Int {
+    val str = "IVXLCDM"
+
+    for (i in roman) { //легальность
+        if (i !in str) return -1
+    }
+
+
+}
 
 /**
  * Очень сложная

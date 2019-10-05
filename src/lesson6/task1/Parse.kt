@@ -297,7 +297,8 @@ fun bestHighJump(jumps: String): Int {
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
 fun plusMinus(expression: String): Int {
-    var answer = 0
+    if (expression == "") throw IllegalArgumentException()
+    var answer: Int
     val input = expression.split(" ")
     val a = "1234567890"
     if (input.size % 2 == 0) throw IllegalArgumentException()
@@ -311,14 +312,13 @@ fun plusMinus(expression: String): Int {
 
     var n = 0
     answer = trysumm(n)
-
     for (i in 1..(input.size - 1) / 2) {
         n = 2 * i
-        if (input[2 * i - 1] == "+") {
-            answer += trysumm(n)
-        } else if (input[2 * i - 1] == "-") {
-            answer -= trysumm(n)
-        } else throw IllegalArgumentException()
+        when {
+            input[2 * i - 1] == "+" -> answer += trysumm(n)
+            input[2 * i - 1] == "-" -> answer -= trysumm(n)
+            else -> throw IllegalArgumentException()
+        }
     }
     return answer
 }
@@ -331,7 +331,17 @@ fun plusMinus(expression: String): Int {
  * Слова, отличающиеся только регистром, считать совпадающими.
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
-fun firstDuplicateIndex(str: String): Int = TODO()
+fun firstDuplicateIndex(str: String): Int {
+    val input = str.split(" ")
+    var len = 0
+    for (i in 0 until input.size - 1) {
+        if (input[i].toUpperCase() == input[i + 1].toUpperCase()) {
+            return len
+        }
+        len += input[i].length + 1  // +1 с учетом пробела
+    }
+    return -1
+}
 
 /**
  * Сложная

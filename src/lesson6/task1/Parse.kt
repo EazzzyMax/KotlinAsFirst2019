@@ -403,6 +403,8 @@ fun mostExpensive(description: String): String {
  */
 fun fromRoman(roman: String): Int {
 
+    if (roman == "") return -1
+
     val map = mapOf('M' to 1000, 'D' to 500, 'C' to 100, 'L' to 50, 'X' to 10, 'V' to 5, 'I' to 1)
 
     for (i in roman) { //легальность

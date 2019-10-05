@@ -205,7 +205,7 @@ fun flattenPhoneNumber(phone: String): String {
         if (right == -1) return ""                             //тогда должна быть правая скоб очка
         if (left != phonelist.lastIndexOf('(')) return ""      //левая только одна
         if (right != phonelist.lastIndexOf(')')) return ""     //правая только одна
-        if (right - left < 2) return ""                        // между ними должно быть расстояние
+        if (right - left < 2) return ""                        //между ними должно быть расстояние
         for (i in left + 1 until right) {                      //проверка шо в скоб очке
             if (phonelist[i] == '+') return ""
         }
@@ -303,8 +303,10 @@ fun plusMinus(expression: String): Int {
     for (i in expression) if (i !in notTrash) throw IllegalArgumentException()  //легальность
 
     val input = expression.split(" ")
+
+    if (input.size % 2 == 0) throw IllegalArgumentException()  //шоб А + А + А + А было (нечет)
+
     val a = "1234567890"
-    if (input.size % 2 == 0) throw IllegalArgumentException()
 
     fun trysumm(n: Int): Int {  //пытается вернуть Int (без знака)
         for (i in input[n]) {   //используется потому что "+2" переводится в инт
@@ -332,6 +334,7 @@ fun plusMinus(expression: String): Int {
  * Строка состоит из набора слов, отделённых друг от друга одним пробелом.
  * Определить, имеются ли в строке повторяющиеся слова, идущие друг за другом.
  * Слова, отличающиеся только регистром, считать совпадающими.
+ * Вернуть индекс начала первого повторяющегося слова, или -1, если повторов нет.
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
 fun firstDuplicateIndex(str: String): Int {
@@ -349,7 +352,6 @@ fun firstDuplicateIndex(str: String): Int {
 /**
  * Сложная
  *
- * Вернуть индекс начала первого повторяющегося слова, или -1, если повторов нет.
  * Строка содержит названия товаров и цены на них в формате вида
  * "Хлеб 39.9; Молоко 62; Курица 184.0; Конфеты 89.9".
  * То есть, название товара отделено от цены пробелом,
@@ -358,7 +360,35 @@ fun firstDuplicateIndex(str: String): Int {
  * или пустую строку при нарушении формата строки.
  * Все цены должны быть больше либо равны нуля.
  */
-fun mostExpensive(description: String): String = TODO()
+fun mostExpensive(description: String): String {
+    if (description == "") return ""
+
+    val input = description.split("; ")         //по парам имя - цена
+    val list = mutableListOf<String>()          //2n - имя     2n+1 - цена
+
+    for (i in 0 until input.size) {
+        val minilist = input[i].split(" ")
+        list.add(minilist[0])
+        list.add(minilist[1])
+    }
+
+    if (list.size % 2 != 0) return ""           //если не по парам
+
+    var answer = ""
+    var biggestPrice = -0.000000000000000000000001
+
+    for (i in 0 until list.size / 2) {
+        try {                                   //попытка сравнить цену с наибольшей
+            if (list[2 * i + 1].toDouble() > biggestPrice) {
+                biggestPrice = list[2 * i + 1].toDouble()
+                answer = list[2 * i]
+            }
+        } catch (e: NumberFormatException) {
+            return ""
+        }
+    }
+    return answer
+}
 
 /**
  * Сложная

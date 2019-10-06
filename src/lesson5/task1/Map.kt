@@ -471,4 +471,21 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  *     450
  *   ) -> emptySet()
  */
-fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> = TODO()
+fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
+    val mainList = mutableMapOf<Pair<String, Int>, Pair<Int, List<String>>>()
+    //                                 |      |          |      ||||||
+    //                                имя вместимость   цена список сокровищ
+
+    val previousname = "надеюсь такого имени в ваших входных данных не будет, ведь правда?"
+
+    for ((name, digits) in treasures) {   //name - название   digits.first - цена   digits.second - вес
+        val price = digits.first
+        val weight = digits.second
+        for (nowCapacity in 0..capacity) {
+            if (weight <= nowCapacity) {   //достаю цену из ячейки из предыдущей строки с максимальным весом
+                if (price + ((mainList[previousname to nowCapacity - weight])?.first ?: 0) >
+                        1)
+            }
+        }
+    }
+}

@@ -413,7 +413,6 @@ fun fromRoman(roman: String): Int {
 
     var answer = 0
     var tumblerIXC = 0 //во избежание двух подряд на возрастание IXC
-    var tumblerVV = 0 //во избежание двух подряд V / L / D
     var tumblerIIII = 0
 
     var now: Int
@@ -427,6 +426,7 @@ fun fromRoman(roman: String): Int {
 
             if (next == now * 10 || next == now * 5) {         //если этот меньше следующего в 5/10 раз (вычитание)
                 if (tumblerIXC == 1) {                           //если до этого уже шло вычитание (IX / CD) - сброс
+                    println(1)
                     return -1
                 } else {                                         //вычитаю и активирую тумблер
                     answer -= now
@@ -440,16 +440,22 @@ fun fromRoman(roman: String): Int {
                 answer += now
                 tumblerIIII += 1
             } else {
+                println(2)
                 return -1
             }
-            tumblerVV = 0
 
-        } else if (next < now && tumblerVV == 0) {           //5 50 500 если не шли до этого
+        } else if (now > next) {           //5 50 500 если не шли до этого
+            if (now == next) return -1  //две подряд 5 5 50 50 500 500 нельзя
             answer += now
-            tumblerVV = 1
             tumblerIIII = 0
             tumblerIXC = 0
+
         } else {                                                 //если шли до этого - сброс
+            println(3)
+            println(roman[i])
+            println(roman[i + 1])
+            println(i)
+
             return -1
         }
     }

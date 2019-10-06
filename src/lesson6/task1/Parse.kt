@@ -424,8 +424,10 @@ fun fromRoman(roman: String): Int {
         next = map[roman[i + 1]] ?: error("")
 
         if ((now.toString())[0] == '1' && tumblerIIII < 3) {                        //1000 100 10 1
+
             if (next == now * 10 || next == now * 5) {         //если этот меньше следующего в 5/10 раз (вычитание)
                 if (tumblerIXC == 1) {                           //если до этого уже шло вычитание (IX / CD) - сброс
+                    print(1)
                     return -1
                 } else {                                         //вычитаю и активирую тумблер
                     answer -= now
@@ -434,19 +436,26 @@ fun fromRoman(roman: String): Int {
             } else if (next < now) {                           //если этот больше следующего
                 answer += now
                 tumblerIXC = 0
+                tumblerIIII = 0
             } else if (next == now) {
                 answer += now
                 tumblerIIII += 1
             } else {
+                print(2)
                 return -1
             }
             tumblerVV = 0
+
         } else if (next < now && tumblerVV == 0) {           //5 50 500 если не шли до этого
             answer += now
             tumblerVV = 1
             tumblerIIII = 0
             tumblerIXC = 0
         } else {                                                 //если шли до этого - сброс
+            println(3)
+            println(roman[i])
+            println(roman[i + 1])
+            println(i)
             return -1
         }
     }

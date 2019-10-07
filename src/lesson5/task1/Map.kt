@@ -456,36 +456,56 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  * Входными данными является ассоциативный массив
  * "название сокровища"-"пара (вес сокровища, цена сокровища)"
  * и вместимость вашего рюкзака.
- * Необходимо вернуть множество сокровищ с максимальной суммарной стоимостью,
- * которые вы можете унести в рюкзаке.
- *
- * Перед решением этой задачи лучше прочитать статью Википедии "Динамическое программирование".
- *
- * Например:
- *   bagPacking(
+ * Необходимо вернуть множество сокровищ с максимальной суммарной стоимостью,]
+ * которые вы можете унести в рюкзаке.]
+ *]
+ * Перед решением этой задачи лучше прочитать статью Википедии "Динамическое программирование".]
+ *]
+ * Например:]
+ *   bagPacking(]
  *     mapOf("Кубок" to (500 to 2000), "Слиток" to (1000 to 5000)),
  *     850
- *   ) -> setOf("Кубок")
- *   bagPacking(
+ *   ) -> setOf("Кубок")]
+ *   bagPacking(]
  *     mapOf("Кубок" to (500 to 2000), "Слиток" to (1000 to 5000)),
  *     450
- *   ) -> emptySet()
+ *   ) -> emptySet()]
  */
 fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
     val mainList = mutableMapOf<Pair<String, Int>, Pair<Int, List<String>>>()
     //                                 |      |          |      ||||||
-    //                                имя вместимость   цена список сокровищ
+    //                                имя nowCapacity   цена список сокровищ
 
-    val previousname = "надеюсь такого имени в ваших входных данных не будет, ведь правда?"
+    var previousname = "надеюсь такого имени в ваших входных данных не будет, ведь правда?"
+    for ((name, digits) in treasures) {   //name - название   digits.first - вес   digits.second - цена
+        val price = digits.second
+        val weight = digits.first
 
-    for ((name, digits) in treasures) {   //name - название   digits.first - цена   digits.second - вес
-        val price = digits.first
-        val weight = digits.second
         for (nowCapacity in 0..capacity) {
-            if (weight <= nowCapacity) {   //достаю цену из ячейки из предыдущей строки с максимальным весом
-                if (price + ((mainList[previousname to nowCapacity - weight])?.first ?: 0) >
-                        1)
+            if (weight <= nowCapacity) {  //если можно впихнуть
+
+                //достаю цену из ячейки из предыдущей строки с максимальным весом и складываю с нынешней (newcost)
+                //сравниваю с ценой в верхней ячейке (oldcost)
+                val newcost = price + ((mainList[previousname to nowCapacity - weight])?.first ?: 0)
+                val oldcost = ((mainList[previousname to nowCapacity])?.first ?: 0)
+
+                if (newcost > oldcost) { //если новая стоимость больше
+                    mainList[name to nowCapacity] =  // беру из той же ячейки тока не first, a second      + name
+                        newcost to (((mainList[previousname to nowCapacity - weight])?.second ?: listOf()) + name)
+
+                } else { //если старая стоимость больше переношу верхнюю ячейку вниз целиком
+                    mainList[name to nowCapacity] =
+                        oldcost to ((mainList[previousname to nowCapacity])?.second ?: listOf())
+                }
+
+            } else { //если не впихнулось
+                val oldcost = ((mainList[previousname to nowCapacity])?.first ?: 0)
+                mainList[name to nowCapacity] =
+                    oldcost to ((mainList[previousname to nowCapacity])?.second ?: listOf())
             }
+
         }
+        previousname = name
     }
+    return ((mainList[previousname to capacity])?.second ?: listOf()).toSet()
 }

@@ -553,6 +553,13 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
         fun cycle(): Unit {  //скобочки. выполняет цикл и отдает обратно
             counter++
             actionNow++
+            if (commands[actionNow] == ']' && mainList[nowCells] != 0) {
+                counter = limit
+                return
+            } else if (commands[actionNow] == ']' && mainList[nowCells] == 0) {
+                actionNow += 1
+                return
+            }
             print("a")
             print(actionNow)
             //pprint()
@@ -591,14 +598,17 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
             '+' -> mainList[nowCells]++
             '-' -> mainList[nowCells]--
             '[' -> cycle()
-            else -> actionNow--
+            else -> {
+
+            }
         }
         if (nowCells >= cells || nowCells < 0) throw IllegalStateException() //выход за пределы конвеера (mainList)
-        actionNow++
-        print("d")
-        print(actionNow)
-        counter++
-
+        if (counter != limit) {
+            actionNow++
+            print("d")
+            print(actionNow)
+            counter++
+        }
         //pprint()
     }
 

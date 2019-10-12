@@ -553,41 +553,41 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
         fun cycle(): Unit {  //скобочки. выполняет цикл и отдает обратно
             counter++
             actionNow++
-            if (commands[actionNow] == ']' && mainList[nowCells] != 0) {
+            if (commands[actionNow] == ']' && mainList[nowCells] != 0) { //если зациклился пустой цикл
                 counter = limit
                 return
-            } else if (commands[actionNow] == ']' && mainList[nowCells] == 0) {
+            } else if (commands[actionNow] == ']' && mainList[nowCells] == 0) { //если пустой цикл нужно пропустить
                 actionNow += 1
                 return
             }
-            print("a")
-            print(actionNow)
-            //pprint()
+            //print("a")
+            //print(actionNow)
+            pprint()
             if (mainList[nowCells] != 0) {  //запускаю цикл если ячейка не 0. пока не встретится скобка (а в ячейке 0) или пока не достигну лимит
                 val againFrom = actionNow
                 while (!(commands[actionNow] == ']' && mainList[nowCells] == 0) && counter < limit) {
                     if (commands[actionNow] == ']') {
                         counter++
-                        //actionNow++
-                        //pprint()
+                        actionNow++
+                        pprint()
                         actionNow = againFrom
-                        print("b")
-                        print(actionNow)
+                        //print("b")
+                        //print(actionNow)
                     }
                     oneAction()  //тут могут открыться вложенные скобки
 
                 }
             } else { //пропускаю цикл
-                //print("пропуск")
-                //counter-- //кокойто магический прием должен все починить
+                print("пропуск")
                 var close = 0 //что бы не закрылось на вложенных в скобки еще одних скобках [    [] ]
                 while (commands[actionNow] != ']' || close != 0) {
                     if (commands[actionNow] == '[') close++
                     else if (commands[actionNow] == ']') close--
                     actionNow++
-                    print("c")
-                    print(actionNow)
+                    //print("c")
+                    //print(actionNow)
                 }
+                actionNow++
             }
         }
         //скобочки///////////////////////////скобочки//////////////////////////////скобочки
@@ -605,11 +605,11 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
         if (nowCells >= cells || nowCells < 0) throw IllegalStateException() //выход за пределы конвеера (mainList)
         if (counter != limit) {
             actionNow++
-            print("d")
-            print(actionNow)
+            //print("d")
+            //print(actionNow)
             counter++
         }
-        //pprint()
+        pprint()
     }
 
 ////////////////////////////////////////////////////////////////////////////////////////

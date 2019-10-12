@@ -188,36 +188,17 @@ fun dateDigitToStr(digital: String): String {
  * PS: Дополнительные примеры работы функции можно посмотреть в соответствующих тестах.
  */
 fun flattenPhoneNumber(phone: String): String {
-    val phonelist = mutableListOf<Char>()
-    val notTrash = listOf('1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '+', '(', ')', ' ', '-')
-    val motTrash = listOf('1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '+', '(', ')')
+    val ind = phone.contains(Regex("""^\+? *\d+ *(\( *\d+ *-* *\d*\))?( *\d*-*)*$"""))//ето показал мне один извращенец
 
-    for (i in phone) { //првоеряю "легален" ли номер и удаляю лишнее
-        if (i !in notTrash) return ""
-        if (i in motTrash) phonelist.add(i)
+    if (!ind) return ""
+    val phoneList = mutableListOf<Char>()
+    val motTrash = listOf('1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '+')
+
+    for (i in phone) { //удаляю лишнее
+        if (i in motTrash) phoneList.add(i)
     }
 
-    val left = phonelist.indexOf('(')
-    val right = phonelist.indexOf(')')
-
-    //СКОБОЧКА
-    if (left != -1) { //есть левая cкоб очка?
-        if (right == -1) return ""                             //тогда должна быть правая скоб очка
-        if (left != phonelist.lastIndexOf('(')) return ""      //левая только одна
-        if (right != phonelist.lastIndexOf(')')) return ""     //правая только одна
-        if (right - left < 2) return ""                        //между ними должно быть расстояние
-        for (i in left + 1 until right) {                      //проверка шо в скоб очке
-            if (phonelist[i] == '+') return ""
-        }
-    } else if (right != -1) return ""         //раз нет левой, то не над и правую
-
-    //ПЛЮСИКИ
-    val plus = phonelist.indexOf('+')
-    if (plus != 0 && plus != -1) return ""                     //стоит первым
-    if (plus != phonelist.lastIndexOf('+')) return ""          //нет второго
-    if (plus == 0 && (phonelist.filter { it != '(' && it != ')' }).size == 1) return ""
-
-    return (phonelist.filter { it != '(' && it != ')' }).joinToString(separator = "")
+    return (phoneList.joinToString(separator = ""))
 }
 
 /**
@@ -500,4 +481,133 @@ fun fromRoman(roman: String): Int {
  * IllegalArgumentException должен бросаться даже если ошибочная команда не была достигнута в ходе выполнения.
  *
  */
-fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> = TODO()
+fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
+    //val ind = commands.contains(Regex("""^(>*<*\+*-* *(\[>*<*\+*-* *])*)*$""")) //не работает на вложенные скобки)
+
+    val notTrash = "<>+-[] "
+
+
+    //проверка на легальность
+    for (i in commands) { //легальные символы
+        if (i !in notTrash) {
+            throw IllegalArgumentException()
+        }
+    }
+    val sk = commands.filter { it == '[' || it == ']' } //строка только со скобками
+    var j = 0
+    for (i in sk) {  //порядок скобок
+        if (i == '[') j++
+        else j--
+        if (j < 0) throw IllegalArgumentException()
+    }
+    if (j != 0) throw IllegalArgumentException()
+
+    var nowCells = cells / 2   //изменяемая ячейка
+    val mainList = MutableList(cells) { 0 }
+
+    var counter = 0            //счетчик действий
+    var actionNow = 0          //номер команды
+    var broke = 0
+
+    //pprint() использовался для отладки
+    fun pprint(): Unit {
+        println()
+        print(commands[actionNow - 1])
+        for (i in 0 until nowCells) {
+            print("  ")
+        }
+        print("|")  //на mainList
+        for (i in 0 until 13 - nowCells) {
+            print("  ")
+        }
+        for (i in 0..actionNow - 2) {
+            print(" ")
+        }
+        print("|")  //на commands
+
+        println()
+        print(
+            java.lang.String.format(
+                "%2d%2d%2d%2d%2d%2d%2d%2d%2d%2d%2d",
+                mainList[0],
+                mainList[1],
+                mainList[2],
+                mainList[3],
+                mainList[4],
+                mainList[5],
+                mainList[6],
+                mainList[7],
+                mainList[8],
+                mainList[9],
+                mainList[10]
+            )
+        )
+        print("      ")
+        print(commands)
+        print("      ")
+        print(counter)
+    }
+
+
+    fun oneAction(): Unit { //выполняет одну операцию. сам переходит на следующий actionNow. сам считает counter
+
+        //скобочки///////////////////////////скобочки//////////////////////////////скобочки
+        fun cycle(): Unit {  //скобочки. выполняет цикл и отдает обратно
+            counter++
+            actionNow++
+            //pprint()
+            if (mainList[nowCells] != 0) {  //запускаю цикл если ячейка не 0. пока не встретится скобка (а в ячейке 0) или пока не достигну лимит
+                val againFrom = actionNow
+                while (!(commands[actionNow] == ']' && mainList[nowCells] == 0) && counter < limit) {
+                    if (commands[actionNow] == ']') {
+                        counter++
+                        //pprint()
+                        actionNow = againFrom
+                    }
+                    oneAction()  //тут могут открыться вложенные скобки
+
+                }
+            } else { //пропускаю цикл
+                //print("пропуск")
+                var close = 0 //что бы не закрылось на вложенных в скобки еще одних скобках [    [] ]
+                while (commands[actionNow] != ']' || close != 0) {
+                    if (commands[actionNow] == '[') close++
+                    else if (commands[actionNow] == ']') close--
+                    actionNow++
+                }
+            }
+        }
+        //скобочки///////////////////////////скобочки//////////////////////////////скобочки
+
+        when (commands[actionNow]) {
+            '>' -> nowCells++
+            '<' -> nowCells--
+            '+' -> mainList[nowCells]++
+            '-' -> mainList[nowCells]--
+            '[' -> cycle()
+            else -> { //тутачки пробел. ничо не делаю
+            }
+        }
+        if (nowCells > cells || nowCells < 0) throw IllegalStateException() //выход за пределы конвеера (mainList)
+        actionNow++
+        counter++
+
+        //pprint()
+    }
+
+////////////////////////////////////////////////////////////////////////////////////////
+    while (counter < limit && actionNow < commands.length) {  //главный цикл
+        oneAction()
+    }
+
+    return (mainList)
+}
+
+
+//cycle передаю обратно закрытую скобку. oneAction (а именно через него запускается cycle ( '[' -> cycle )) сам перейдет на следующую
+//команду. когда выходим из скобки цикл продолжается через while, с которого все и начиналось. выход из while происходит когда
+//достигнут лимит или когда выполненны все команды.
+
+//в случае зацикливания - ?
+
+//oneAction не готов к ']'

@@ -4,6 +4,7 @@ package lesson4.task1
 
 import lesson1.task1.discriminant
 import lesson3.task1.isPrime
+import java.lang.StringBuilder
 import kotlin.math.sqrt
 
 /**
@@ -255,6 +256,7 @@ fun convert(n: Int, base: Int): List<Int> {
 fun convertToString(n: Int, base: Int): String {
     // a = 97 = 10 = 97-87
     //10. 10+87=97. 97.toChar() = a
+
     fun tochar(n: Int): String = if (n > 9) (n + 87).toChar().toString() else n.toString()
 
     val list = convert(n, base)
@@ -350,7 +352,7 @@ fun roman(n: Int): String {
 fun russian(n: Int): String {
     val a = n / 1000
     val b = n % 1000
-    var ans = ""
+    var ans = StringBuilder()
     val hundreds = listOf(
         "",
         " сто",
@@ -408,11 +410,11 @@ fun russian(n: Int): String {
         else (" тысячи")
     }
 
-    ans += rus1(a)
-    if (n > 999) ans += ageDescription(a)
+    ans.append(rus1(a))
+    if (n > 999) ans.append(ageDescription(a))
     units = listOf("", " один", " два", " три", " четыре", " пять", " шесть", " семь", " восемь", " девять")
-    ans += rus1(b)
-    if (ans.first() == ' ') ans = ans.substring(1, ans.length)
-    return ans
+    ans.append(rus1(b))
+    return if (ans.first() == ' ') ans.substring(1, ans.length)
+    else ans.toString()
 }
 

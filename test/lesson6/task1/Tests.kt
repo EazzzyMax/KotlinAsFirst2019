@@ -133,7 +133,7 @@ class Tests {
     @Test
     @Tag("Impossible")
     fun computeDeviceCells() {
-        assertEquals(listOf(1), computeDeviceCells(1, "+", 10000))
+        assertEquals(listOf(1), computeDeviceCells(1, "+[]", 10000))
 
 //        assertEquals(
 //            listOf(0, 8, 7, 6, 5, 4, 3, 2, 1, 0, 0),

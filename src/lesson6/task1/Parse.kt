@@ -553,27 +553,33 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
         fun cycle(): Unit {  //скобочки. выполняет цикл и отдает обратно
             counter++
             actionNow++
+            print("a")
+            print(actionNow)
             //pprint()
             if (mainList[nowCells] != 0) {  //запускаю цикл если ячейка не 0. пока не встретится скобка (а в ячейке 0) или пока не достигну лимит
                 val againFrom = actionNow
                 while (!(commands[actionNow] == ']' && mainList[nowCells] == 0) && counter < limit) {
                     if (commands[actionNow] == ']') {
                         counter++
-                        actionNow++
+                        //actionNow++
                         //pprint()
                         actionNow = againFrom
+                        print("b")
+                        print(actionNow)
                     }
                     oneAction()  //тут могут открыться вложенные скобки
 
                 }
             } else { //пропускаю цикл
                 //print("пропуск")
-                counter-- //кокойто магический прием должен все починить
+                //counter-- //кокойто магический прием должен все починить =
                 var close = 0 //что бы не закрылось на вложенных в скобки еще одних скобках [    [] ]
                 while (commands[actionNow] != ']' || close != 0) {
                     if (commands[actionNow] == '[') close++
                     else if (commands[actionNow] == ']') close--
                     actionNow++
+                    print("c")
+                    print(actionNow)
                 }
             }
         }
@@ -585,11 +591,12 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
             '+' -> mainList[nowCells]++
             '-' -> mainList[nowCells]--
             '[' -> cycle()
-            else -> { //тутачки пробел. ничо не делаю
-            }
+            else -> actionNow--
         }
         if (nowCells >= cells || nowCells < 0) throw IllegalStateException() //выход за пределы конвеера (mainList)
         actionNow++
+        print("d")
+        print(actionNow)
         counter++
 
         //pprint()

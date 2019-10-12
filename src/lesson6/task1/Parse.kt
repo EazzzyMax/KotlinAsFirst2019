@@ -484,10 +484,8 @@ fun fromRoman(roman: String): Int {
 fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     //val ind = commands.contains(Regex("""^(>*<*\+*-* *(\[>*<*\+*-* *])*)*$""")) //не работает на вложенные скобки)
 
-    val notTrash = "<>+-[] "
-
-
     //проверка на легальность
+    val notTrash = "<>+-[] "
     for (i in commands) { //легальные символы
         if (i !in notTrash) {
             throw IllegalArgumentException()
@@ -502,12 +500,12 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     }
     if (j != 0) throw IllegalArgumentException()
 
+
     var nowCells = cells / 2   //изменяемая ячейка
     val mainList = MutableList(cells) { 0 }
 
     var counter = 0            //счетчик действий
     var actionNow = 0          //номер команды
-    var broke = 0
 
     //pprint() использовался для отладки
     fun pprint(): Unit {
@@ -588,7 +586,7 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
             else -> { //тутачки пробел. ничо не делаю
             }
         }
-        if (nowCells > cells || nowCells < 0) throw IllegalStateException() //выход за пределы конвеера (mainList)
+        if (nowCells >= cells || nowCells < 0) throw IllegalStateException() //выход за пределы конвеера (mainList)
         actionNow++
         counter++
 

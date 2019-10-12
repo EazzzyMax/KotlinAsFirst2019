@@ -553,21 +553,21 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
         fun cycle(): Unit {  //скобочки. выполняет цикл и отдает обратно
             counter++
             actionNow++
-            pprint()
+            //pprint()
             if (mainList[nowCells] != 0) {  //запускаю цикл если ячейка не 0. пока не встретится скобка (а в ячейке 0) или пока не достигну лимит
                 val againFrom = actionNow
                 while (!(commands[actionNow] == ']' && mainList[nowCells] == 0) && counter < limit) {
                     if (commands[actionNow] == ']') {
                         counter++
                         actionNow++
-                        pprint()
+                        //pprint()
                         actionNow = againFrom
                     }
                     oneAction()  //тут могут открыться вложенные скобки
 
                 }
             } else { //пропускаю цикл
-                print("пропуск")
+                //print("пропуск")
                 counter-- //кокойто магический прием должен все починить
                 var close = 0 //что бы не закрылось на вложенных в скобки еще одних скобках [    [] ]
                 while (commands[actionNow] != ']' || close != 0) {
@@ -592,7 +592,7 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
         actionNow++
         counter++
 
-        pprint()
+        //pprint()
     }
 
 ////////////////////////////////////////////////////////////////////////////////////////

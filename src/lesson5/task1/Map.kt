@@ -174,19 +174,19 @@ fun whoAreInBoth(a: List<String>, b: List<String>): List<String> {
  *   ) -> mapOf("Emergency" to "112, 911", "Police" to "02")
  */
 fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<String, String> {
-    val newList = mutableMapOf<String, String>()
+    val newMap = mutableMapOf<String, String>()
 
     for ((name) in mapA) {
-        newList[name] = newList.getOrDefault(name, String()) + mapA[name]
+        newMap[name] = mapA[name]!!
     }
     for ((name) in mapB) {
-        if (name !in newList) {
-            newList[name] = newList.getOrDefault(name, String()) + mapB[name]
+        if (name !in newMap) {
+            newMap[name] = mapB[name]!!
         } else if (mapB[name] != mapA[name]) {
-            newList[name] = newList.getOrDefault(name, String()) + ", " + mapB[name]
+            newMap[name] = newMap[name] + ", " + mapB[name]
         }
     }
-    return newList
+    return newMap
 }
 
 
@@ -228,16 +228,16 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
  *   ) -> "Мария"
  */
 fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? {
-    var minprice = Double.MAX_VALUE
-    var ansname: String?
-    ansname = null
+    var minPrice = Double.MAX_VALUE
+    var ansName: String?
+    ansName = null
     for ((name, pairnow) in stuff) {
-        if ((pairnow.first == kind) && (pairnow.second <= minprice)) {
-            minprice = pairnow.second
-            ansname = name
+        if ((pairnow.first == kind) && (pairnow.second <= minPrice)) {
+            minPrice = pairnow.second
+            ansName = name
         }
     }
-    return ansname
+    return ansName
 }
 
 /**
@@ -250,8 +250,9 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  *   canBuildFrom(listOf('a', 'b', 'o'), "baobab") -> true
  */
 fun canBuildFrom(chars: List<Char>, word: String): Boolean {
+    val cSet = chars.toSet()
     for (charnow in word) {
-        if (charnow !in chars && charnow.toUpperCase() !in chars) return false
+        if (charnow !in cSet && charnow.toUpperCase() !in cSet && charnow.toLowerCase() !in cSet) return false
     }
     return true
 }
@@ -290,8 +291,9 @@ fun hasAnagrams(words: List<String>): Boolean {
     if (words.size == 1) return false
     for (i in 0 until words.size - 1) {
         val map = mutableMapOf<Char, Int>()
-        for (charr in words[i]) map[charr] = map.getOrDefault(charr, 0) + 1
-
+        for (charr in words[i]) {
+            map[charr] = map.getOrDefault(charr, 0) + 1
+        }
         for (j in i + 1 until words.size) {
             if (words[i] == words[j]) return true
             val map1 = mutableMapOf<Char, Int>()
@@ -377,73 +379,17 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
     if (list.size < 2) return -1 to -1
     if (list.max()!! * 2 < number) return -1 to -1
     if (list.min()!! * 2 > number) return -1 to -1
-
-    val newlist = list.toMutableList() //что бы можно было удалить элемент в слеEEдующем алгоритме
-
     //проверяю не состоит ли number из двух равных чисел, чтобы дальше работать с множествами
     if (number % 2 == 0) {
-        var i = 0
-        if (number / 2 in newlist) {
-            i = list.indexOf(number / 2)
-            newlist.remove(number / 2)
+        if (list.indexOf(number / 2) != list.lastIndexOf(number / 2)) {
+            return list.indexOf(number / 2) to list.lastIndexOf(number / 2)
         }
-        if (number / 2 in newlist) return i to newlist.indexOf(number / 2) + 1
     }
-
-    val newset = newlist.toSet().toMutableList() //лист без повторяющихся чисел
-
-    //убираю слишком большие или слишком малые значения
-    if (newset.min()!! + newset.max()!! > number) {
-        for (i in newlist.toSet()) if (i + newset.min()!! > number) newset.remove(i)
-    } else if (newset.min()!! + newset.max()!! < number) {
-        for (i in newlist.toSet()) if (i + newset.max()!! < number) newset.remove(i)
-    }
-
-    //разделяю список на 10 списков (внутри map) в замисимости от последней цифры.
-    val frag = mutableMapOf<Int, Set<Int>>() //                                      !!!!! -> frag <- !!!!!
-    for (i in newset) {
-        frag[i % 10] = frag.getOrDefault(i % 10, setOf()) + i
-    }
-
-    // перебор
-    val lastnum = number % 10
-    if (lastnum % 2 == 0) { // для 0 2 4 6 8
-        for (i in lastnum / 2 + 1..lastnum / 2 + 4) { //перебор левых i. j - его пара
-            val j = (10 + lastnum - i) % 10
-            for (left in frag[i] ?: setOf()) {    //перебираю все что заканчиваются на i
-                if (number - left in frag[j] ?: setOf()) { //нет ли в парном списке frag[j] того что вместе даст number
-                    val ans1 = list.indexOf(left)
-                    val ans2 = list.indexOf(number - left)
-                    return if (ans1 < ans2) ans1 to ans2 else ans2 to ans1
-                }
-            }
+    val newSet = list.toSet()
+    for (i in newSet) {
+        if ((number - i) in newSet && list.indexOf(i) != list.indexOf(number - i)) {
+            return list.indexOf(i) to list.indexOf(number - i)
         }
-        for (left in frag[lastnum / 2] ?: setOf()) {
-            if (number - left in frag[lastnum / 2] ?: setOf()) { //нет ли в frag[j] того что вместе даст number
-                val ans1 = list.indexOf(left)
-                val ans2 = list.indexOf(number - left)
-                return ans1 to ans2
-            }
-        }
-        for (left in frag[(lastnum + 10) / 2] ?: setOf()) {
-            if (number - left in frag[(lastnum + 10) / 2] ?: setOf()) { //нет ли в frag[j] того что вместе даст number
-                val ans1 = list.indexOf(left)
-                val ans2 = list.indexOf(number - left)
-                return ans1 to ans2
-            }
-        }
-    } else {   //для 1 3 5 7 9
-        for (i in lastnum / 2 + 1..lastnum / 2 + 5) { //перебор левых i. j - его пара
-            val j = (10 + lastnum - i) % 10
-            for (left in frag[i] ?: setOf()) {    //перебираю все что заканчиваются на i
-                if (number - left in frag[j] ?: setOf()) { //нет ли в парном списке frag[j] того что вместе даст number
-                    val ans1 = list.indexOf(left)
-                    val ans2 = list.indexOf(number - left)
-                    return ans1 to ans2
-                }
-            }
-        }
-
     }
     return -1 to -1
 }

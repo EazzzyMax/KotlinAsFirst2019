@@ -254,11 +254,9 @@ fun convert(n: Int, base: Int): List<Int> {
  * (например, n.toString(base) и подобные), запрещается.
  */
 fun convertToString(n: Int, base: Int): String {
-    fun toChar(n: Int): String = if (n > 9) ('a' + n - 10).toString() else n.toString()
-
+    fun tooChar(n: Int): String = if (n > 9) ('a' + n - 10).toString() else n.toString()
     val list = convert(n, base)
-    val newList = list.map { it -> toChar(it) }
-    return list.joinToString(separator = "")
+    return list.joinToString(separator = "", transform = { tooChar(it) })
 }
 
 /**
@@ -289,17 +287,12 @@ fun decimal(digits: List<Int>, base: Int): Int {
  * (например, str.toInt(base)), запрещается.
  */
 fun decimalFromString(str: String, base: Int): Int {
-    //0 = 48
-    val list = mutableListOf<Int>()
+    val digits = mutableListOf<Int>()
     for (i in str) {
-        if (i.toInt() in 48..57) list.add(i.toInt() - 48)
-        else list.add(i.toInt() - 87)
+        if (i in 'a'..'z') digits.add(i.toInt() - 'a'.toInt() + 10) //ну патамуша а-а=0, да 0+10=10 а=10
+        else digits.add(i.toString().toInt())
     }
-    var ans = list[0]
-    for (i in 1 until list.size) {
-        ans = ans * base + list[i]
-    }
-    return ans
+    return decimal(digits, base)
 
 
 }

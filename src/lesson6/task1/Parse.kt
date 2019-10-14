@@ -482,8 +482,6 @@ fun fromRoman(roman: String): Int {
  *
  */
 fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
-    //val ind = commands.contains(Regex("""^(>*<*\+*-* *(\[>*<*\+*-* *])*)*$""")) //не работает на вложенные скобки)
-
     //проверка на легальность
     val notTrash = "<>+-[] "
     for (i in commands) { //легальные символы
@@ -498,131 +496,73 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
         else j--
         if (j < 0) throw IllegalArgumentException()
     }
-    if (j != 0) throw IllegalArgumentException()
+    if (j != 0) throw IllegalArgumentException() //проверка на легальность
 
-
-    var nowCells = cells / 2   //изменяемая ячейка
+    var cellsNow = cells / 2   //изменяемая ячейка
     val mainList = MutableList(cells) { 0 }
 
     var counter = 0            //счетчик действий
     var actionNow = 0          //номер команды
 
-    //pprint() использовался для отладки
-    fun pprint(): Unit {
-        println()
-        print(commands[actionNow - 1])
-        for (i in 0 until nowCells) {
-            print("  ")
-        }
-        print("|")  //на mainList
-        for (i in 0 until 13 - nowCells) {
-            print("  ")
-        }
-        for (i in 0..actionNow - 2) {
-            print(" ")
-        }
-        print("|")  //на commands
+    fun oneAction(): Unit {
 
-        println()
-        print(
-            java.lang.String.format(
-                "%2d%2d%2d%2d%2d%2d%2d%2d%2d%2d%2d",
-                mainList[0],
-                mainList[1],
-                mainList[2],
-                mainList[3],
-                mainList[4],
-                mainList[5],
-                mainList[6],
-                mainList[7],
-                mainList[8],
-                mainList[9],
-                mainList[10]
-            )
-        )
-        print("      ")
-        print(commands)
-        print("      ")
-        print(counter)
-    }
-
-
-    fun oneAction(): Unit { //выполняет одну операцию. сам переходит на следующий actionNow. сам считает counter
-        //скобочки///////////////////////////скобочки//////////////////////////////скобочки
-        fun cycle(): Unit {  //скобочки. выполняет цикл и отдает обратно
-            counter++
-            actionNow++
-            if (commands[actionNow] == ']' && mainList[nowCells] != 0) { //если зациклился пустой цикл
-                counter = limit
-                return
-            } else if (commands[actionNow] == ']' && mainList[nowCells] == 0) { //если пустой цикл нужно пропустить
-                actionNow += 1
-                return
-            }
-            //print("a")
-            //print(actionNow)
-            //pprint()
-            if (mainList[nowCells] != 0) {  //запускаю цикл если ячейка не 0. пока не встретится скобка (а в ячейке 0) или пока не достигну лимит
-                val againFrom = actionNow
-                while (!(commands[actionNow] == ']' && mainList[nowCells] == 0) && counter < limit) {
-                    if (commands[actionNow] == ']') {
-                        counter++
-                        actionNow++
-                        //pprint()
-                        actionNow = againFrom
-                        //print("b")
-                        //print(actionNow)
-                    }
-                    oneAction()  //тут могут открыться вложенные скобки
-
-                }
-            } else { //пропускаю цикл
-                //print("пропуск")
-                var close = 0 //что бы не закрылось на вложенных в скобки еще одних скобках [    [] ]
-                while (commands[actionNow] != ']' || close != 0) {
-                    if (commands[actionNow] == '[') close++
-                    else if (commands[actionNow] == ']') close--
+        fun cycle(): Unit { //на выходе отдать я
+            if (commands[actionNow + 1] == ']') { //если цикл пустой []
+                if (mainList[cellsNow] == 0) { //пропуск
                     actionNow++
-                    //print("c")
-                    //print(actionNow)
+                    return
+                } else { //зацикливание
+                    counter = limit
+                    return
                 }
-                actionNow++
             }
-        }
-        //скобочки///////////////////////////скобочки//////////////////////////////скобочки
 
-        if (counter >= limit) return
-        when (commands[actionNow]) {
-            '>' -> nowCells++
-            '<' -> nowCells--
-            '+' -> mainList[nowCells]++
-            '-' -> mainList[nowCells]--
-            '[' -> cycle()
-            else -> {
-
-            }
-        }
-        if (nowCells >= cells || nowCells < 0) throw IllegalStateException() //выход за пределы конвеера (mainList)
-        if (counter != limit) {
-            actionNow++
-            //print("d")
-            //print(actionNow)
             counter++
+            if (mainList[cellsNow] != 0) {   //начинаю не пустой цикл
+                actionNow++
+                val actionAgain = actionNow
+                while (commands[actionNow] != ']' || mainList[cellsNow] != 0) { //когда встерчается   ] и 0  - закочнить
+                    if (commands[actionNow] == ']') { //встретился конец цикла без 0. начинай с начала
+                        actionNow = actionAgain
+                    }
+                    oneAction()
+                }
+            } else {   //пропускаю цикл
+
+            }
+
         }
-        //pprint()
-        //print("    " + mainList[0])
+
+
+        if (counter <= limit && actionNow <= commands.length - 1) {  //эта проверка требуется при работе внутри цикла
+            when (commands[actionNow]) {
+                '>' -> cellsNow++
+                '<' -> cellsNow--
+                '+' -> mainList[cellsNow]++
+                '-' -> mainList[cellsNow]--
+                '[' -> cycle() //запускается цикл, который выше
+                else -> {
+                    //пробел. не делать ничего
+                }
+            }
+            if (cellsNow == cells || cellsNow < 0) throw IllegalStateException()
+            counter++
+            actionNow++
+        }
+//             смещение (<>) изменение (+-) начало цикла ([. не срабатывает дважды)
+//             если сюда попала ], то она не делает ничего, тк раз она сюда попала,    counter и actionNow только тут и после открытия скобки!!!!
+//             то цикл закрылся. НО счетчик ее считает и переходит на следующую команду
     }
 
-////////////////////////////////////////////////////////////////////////////////////////
-    while (counter < limit && actionNow < commands.length) {  //главный цикл
+    while (counter <= limit && actionNow <= commands.length - 1) {
         oneAction()
     }
-
     return (mainList)
 }
 
-//пока не достигнут лимит или не выполненны все команды выполняю команду oneAction. oneAction может вызвать cycle. он может
-// 1) запустить цикл. тогда запоминается место с которого начался цикл и при достижении закрывающейся скобочки actionNow
-// присваивается это значение. внутри цикла также используется oneAction который может запустить вложенный цикл.
-// 2) пропустить цикл. при этом создается переменная close, служащая для того что бы цикл закрылся на парной скобочке, а не
-// на скобочке вложенного цикла.
+/**
+пока не достигнут лимит или не выполненны все команды выполняю команду oneAction. oneAction может вызвать cycle.
+
+
+ */
+

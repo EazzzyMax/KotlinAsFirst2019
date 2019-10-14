@@ -334,23 +334,21 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
     }
     val answer = mutableMapOf<String, Set<String>>()
     for ((left, right) in friends) {
-        val allfriends = mutableSetOf<String>() //то что верну в answer[left]
-        val afriends = mutableSetOf<String>() //ОБСЛЕДОВАННЫЕ друзья, чьих друзей я добавил. к ним я больше не обращаюсь
-        val bfriends = mutableSetOf<String>() //НЕОБСЛЕДОВАННЫЕ друзья, чьих друзей я еще НЕ добавил.
-        bfriends += right
-        allfriends += right
-        while (bfriends.size != 0) {
-            afriends += bfriends
-            for (name in bfriends) {
-                allfriends += friends[name] ?: setOf()
+        val allFriends = mutableSetOf<String>() //то что верну в answer[left]
+        val aFriends = mutableSetOf<String>() //ОБСЛЕДОВАННЫЕ друзья, чьих друзей я добавил. к ним я больше не обращаюсь
+        val bFriends = mutableSetOf<String>() //НЕОБСЛЕДОВАННЫЕ друзья, чьих друзей я еще НЕ добавил.
+        bFriends += right
+        allFriends += right
+        while (bFriends.size != 0) {
+            aFriends += bFriends
+            for (name in bFriends) {
+                allFriends += friends[name] ?: setOf()
             }
-            bfriends += allfriends
-            bfriends.removeAll(afriends)
+            bFriends += allFriends
+            bFriends.removeAll(aFriends)
         }
-        allfriends.remove(left)
-        answer[left] = allfriends
-
-
+        allFriends.remove(left)
+        answer[left] = allFriends
     }
     for (z in all) {
         answer[z] = answer.getOrDefault(z, setOf())
@@ -490,7 +488,7 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
                 val oldcost = ((mainList[previousname to nowCapacity])?.first ?: 0)
 
                 if (newcost > oldcost) { //если новая стоимость больше
-                    mainList[name to nowCapacity] =  // беру из той же ячейки тока не first, a second      + name
+                    mainList[name to nowCapacity] =  //беру из той же ячейки тока не first, a second      + name
                         newcost to (((mainList[previousname to nowCapacity - weight])?.second ?: listOf()) + name)
 
                 } else { //если старая стоимость больше переношу верхнюю ячейку вниз целиком

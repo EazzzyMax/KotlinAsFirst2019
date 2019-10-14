@@ -400,8 +400,8 @@ fun fromRoman(roman: String): Int {
     var next: Int
 
     for (i in 0 until roman.length - 1) {     //перебор попарно 0-1 1-2 2-3
-        now = map[roman[i]] ?: error("")
-        next = map[roman[i + 1]] ?: error("")
+        now = map.getOrDefault(roman[i], 0)
+        next = map.getOrDefault(roman[i + 1], 0)
 
         if ((now.toString())[0] == '1' && tumblerIIII < 3) {                        //1000 100 10 1
 
@@ -431,12 +431,7 @@ fun fromRoman(roman: String): Int {
             tumblerIIII = 0
             tumblerIXC = 0
 
-        } else {                                                 //если шли до этого - сброс
-            println(3)
-            println(roman[i])
-            println(roman[i + 1])
-            println(i)
-
+        } else {                                                 //если 5 50 500 шли до этого - сброс
             return -1
         }
     }
@@ -482,6 +477,7 @@ fun fromRoman(roman: String): Int {
  *
  */
 fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
+    println("старт")
     //проверка на легальность
     val notTrash = "<>+-[] "
     for (i in commands) { //легальные символы
@@ -496,7 +492,7 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
         else j--
         if (j < 0) throw IllegalArgumentException()
     }
-    if (j != 0) throw IllegalArgumentException() //проверка на легальность
+    if (j != 0) throw IllegalArgumentException()
 
     var cellsNow = cells / 2   //изменяемая ячейка
     val mainList = MutableList(cells) { 0 }
@@ -506,9 +502,9 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
 
     fun oneAction(): Unit {
 
-        fun cycle(): Unit { //на выходе отдать я
+        fun cycle(): Unit { //отдает ]. [ считает сам
             if (commands[actionNow + 1] == ']') { //если цикл пустой []
-                if (mainList[cellsNow] == 0) { //пропуск
+                if (mainList[cellsNow] == 0) {    //пропуск
                     actionNow++
                     return
                 } else { //зацикливание
@@ -521,20 +517,34 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
             if (mainList[cellsNow] != 0) {   //начинаю не пустой цикл
                 actionNow++
                 val actionAgain = actionNow
-                while (commands[actionNow] != ']' || mainList[cellsNow] != 0) { //когда встерчается   ] и 0  - закочнить
+                while ((commands[actionNow] != ']' || mainList[cellsNow] != 0) && counter < limit) { //когда встерчается   ] и 0  - закочнить
+
                     if (commands[actionNow] == ']') { //встретился конец цикла без 0. начинай с начала
                         actionNow = actionAgain
+                        counter++
+                    } else {
+                        oneAction()
+
                     }
-                    oneAction()
+
                 }
             } else {   //пропускаю цикл
+                actionNow++
+                var close = 0
+                while (commands[actionNow] != ']' || close != 0) {
 
+                    when (commands[actionNow]) {
+                        '[' -> close++
+                        ']' -> close--
+                    }
+                    actionNow++
+                }
             }
 
         }
 
 
-        if (counter <= limit && actionNow <= commands.length - 1) {  //эта проверка требуется при работе внутри цикла
+        if (counter < limit && actionNow <= commands.length - 1) {  //эта проверка требуется при работе внутри цикла
             when (commands[actionNow]) {
                 '>' -> cellsNow++
                 '<' -> cellsNow--
@@ -545,16 +555,16 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
                     //пробел. не делать ничего
                 }
             }
-            if (cellsNow == cells || cellsNow < 0) throw IllegalStateException()
+            if (cellsNow == cells || cellsNow < 0) throw IllegalStateException() //выход за конвейер
             counter++
             actionNow++
+
         }
 //             смещение (<>) изменение (+-) начало цикла ([. не срабатывает дважды)
 //             если сюда попала ], то она не делает ничего, тк раз она сюда попала,    counter и actionNow только тут и после открытия скобки!!!!
 //             то цикл закрылся. НО счетчик ее считает и переходит на следующую команду
     }
-
-    while (counter <= limit && actionNow <= commands.length - 1) {
+    while (counter < limit && actionNow <= commands.length - 1) {
         oneAction()
     }
     return (mainList)

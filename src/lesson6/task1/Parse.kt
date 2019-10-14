@@ -577,7 +577,7 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
 
                 }
             } else { //пропускаю цикл
-                print("пропуск")
+                //print("пропуск")
                 var close = 0 //что бы не закрылось на вложенных в скобки еще одних скобках [    [] ]
                 while (commands[actionNow] != ']' || close != 0) {
                     if (commands[actionNow] == '[') close++
@@ -591,6 +591,7 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
         }
         //скобочки///////////////////////////скобочки//////////////////////////////скобочки
 
+        if (counter >= limit) return
         when (commands[actionNow]) {
             '>' -> nowCells++
             '<' -> nowCells--
@@ -609,6 +610,7 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
             counter++
         }
         //pprint()
+        //print("    " + mainList[0])
     }
 
 ////////////////////////////////////////////////////////////////////////////////////////

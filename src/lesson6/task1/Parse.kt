@@ -548,7 +548,6 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
 
 
     fun oneAction(): Unit { //выполняет одну операцию. сам переходит на следующий actionNow. сам считает counter
-
         //скобочки///////////////////////////скобочки//////////////////////////////скобочки
         fun cycle(): Unit {  //скобочки. выполняет цикл и отдает обратно
             counter++
@@ -562,14 +561,14 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
             }
             //print("a")
             //print(actionNow)
-            pprint()
+            //pprint()
             if (mainList[nowCells] != 0) {  //запускаю цикл если ячейка не 0. пока не встретится скобка (а в ячейке 0) или пока не достигну лимит
                 val againFrom = actionNow
                 while (!(commands[actionNow] == ']' && mainList[nowCells] == 0) && counter < limit) {
                     if (commands[actionNow] == ']') {
                         counter++
                         actionNow++
-                        pprint()
+                        //pprint()
                         actionNow = againFrom
                         //print("b")
                         //print(actionNow)
@@ -609,7 +608,7 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
             //print(actionNow)
             counter++
         }
-        pprint()
+        //pprint()
     }
 
 ////////////////////////////////////////////////////////////////////////////////////////

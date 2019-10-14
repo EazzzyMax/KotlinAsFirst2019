@@ -254,14 +254,11 @@ fun convert(n: Int, base: Int): List<Int> {
  * (например, n.toString(base) и подобные), запрещается.
  */
 fun convertToString(n: Int, base: Int): String {
-    // a = 97 = 10 = 97-87
-    //10. 10+87=97. 97.toChar() = a
-
-    fun tochar(n: Int): String = if (n > 9) (n + 87).toChar().toString() else n.toString()
+    fun toChar(n: Int): String = if (n > 9) ('a' + n - 10).toString() else n.toString()
 
     val list = convert(n, base)
-    val newlist = list.map { it -> tochar(it) }
-    return newlist.joinToString(separator = "")
+    val newList = list.map { it -> toChar(it) }
+    return list.joinToString(separator = "")
 }
 
 /**

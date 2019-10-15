@@ -71,47 +71,48 @@ fun main() {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
  * входными данными.
  */
+val months = listOf(
+    "января",
+    "февраля",
+    "марта",
+    "апреля",
+    "мая",
+    "июня",
+    "июля",
+    "августа",
+    "сентября",
+    "октября",
+    "ноября",
+    "декабря"
+)
+
 fun dateStrToDigit(str: String): String {
     val input = str.split(" ")
 
     if (input.size != 3) return ""
 
-    val day: Int
+    val day: Int?
     val month: Int
-    val year: Int
-    val months = listOf(
-        "января",
-        "февраля",
-        "марта",
-        "апреля",
-        "мая",
-        "июня",
-        "июля",
-        "августа",
-        "сентября",
-        "октября",
-        "ноября",
-        "декабря"
-    )
+    val year: Int?
 
-    try { //формат года?
-        year = input[2].toInt()
-    } catch (e: NumberFormatException) {
-        return ""
-    }
+
+
+    year = input[2].toIntOrNull()
+    if (year == null) return ""
+
+
 
     if (input[1] in months) { //формат месяца?
         month = months.indexOf(input[1]) + 1
     } else return ""
 
-    val rightday = daysInMonth(month, year) //количество дней в месяце
+    val rightDay = daysInMonth(month, year) //количество дней в месяце
 
-    try { //формат дня?
-        day = input[0].toInt()
-        if (day > rightday && day > 0) return ""
-    } catch (e: NumberFormatException) {
-        return ""
-    }
+
+    day = input[0].toIntOrNull()
+    if (day == null) return ""
+    if (day > rightDay || day < 0) return ""
+
 
     return String.format("%02d.%02d.%d", day, month, year)
 }
@@ -130,45 +131,24 @@ fun dateDigitToStr(digital: String): String {
     val input = digital.split(".")
     if (input.size != 3) return ""
 
-    val day: Int
-    val month: Int
-    val year: Int
-    val months = listOf(
-        "января",
-        "февраля",
-        "марта",
-        "апреля",
-        "мая",
-        "июня",
-        "июля",
-        "августа",
-        "сентября",
-        "октября",
-        "ноября",
-        "декабря"
-    )
+    val day: Int?
+    val month: Int?
+    val year: Int?
 
-    try {                                    //формат месяца?
-        month = input[1].toInt()
-        if (month !in 1..12) return ""
-    } catch (e: NumberFormatException) {
-        return ""
-    }
+    //формат месяца?
+    month = input[1].toIntOrNull()
+    if (month !in 1..12 || month == null) return ""
 
-    try {                                    //формат года?
-        year = input[2].toInt()
-    } catch (e: NumberFormatException) {
-        return ""
-    }
+    //формат года?
+    year = input[2].toIntOrNull()
+    if (year == null) return ""
 
-    val rightday = daysInMonth(month, year)
 
-    try {                                   //формат дня?
-        day = input[0].toInt()
-        if (day > rightday && day > 0) return ""
-    } catch (e: NumberFormatException) {
-        return ""
-    }
+    //формат дня?
+    val rightDay = daysInMonth(month, year)
+    day = input[0].toIntOrNull()
+    if (day == null || day > rightDay || day < 0) return ""
+
 
     return String.format("%d %s %d", day, months[month - 1], year)
 }
@@ -188,11 +168,11 @@ fun dateDigitToStr(digital: String): String {
  * PS: Дополнительные примеры работы функции можно посмотреть в соответствующих тестах.
  */
 fun flattenPhoneNumber(phone: String): String {
-    val ind = phone.contains(Regex("""^\+? *\d+ *(\( *\d+ *-* *\d*\))?( *\d*-*)*$"""))//ето показал мне один извращенец
+    val legal = phone.contains(Regex("""^\+? *\d+ *(\( *\d+ *-* *\d*\))?( *\d*-*)*$"""))
 
-    if (!ind) return ""
+    if (!legal) return ""
     val phoneList = mutableListOf<Char>()
-    val motTrash = listOf('1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '+')
+    val motTrash = setOf('1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '+')
 
     for (i in phone) { //удаляю лишнее
         if (i in motTrash) phoneList.add(i)
@@ -216,13 +196,12 @@ fun bestLongJump(jumps: String): Int {
     val input = jumps.split(" ")
     if (input.isEmpty()) return -1
     val digits = mutableListOf<Int>()
-
     for (i in input) { //все числа
-
-        try {
-            digits.add(i.toInt())
-        } catch (e: NumberFormatException) {
-            if (i !in notTrash) return -1       //если исключение - это не число. проверка на допустимые символы
+        val x = i.toIntOrNull()
+        if (x == null) {
+            if (i !in notTrash) return -1
+        } else {
+            digits.add(x)
         }
     }
     return digits.max() ?: -1
@@ -259,10 +238,11 @@ fun bestHighJump(jumps: String): Int {
     var maxx = -1
 
     for (i in list1) {
-        try {
-            if (i.toInt() > maxx) maxx = i.toInt()
-        } catch (e: NumberFormatException) {
+        val x = i.toIntOrNull()
+        if (x != null) {
+            if (x > maxx) maxx = x
         }
+
     }
 
     return maxx
@@ -281,7 +261,9 @@ fun plusMinus(expression: String): Int {
     if (expression == "") throw IllegalArgumentException()  //не пустой ли
 
     val notTrash = "1234567890 -+"
-    for (i in expression) if (i !in notTrash) throw IllegalArgumentException()  //легальность
+    for (i in expression) { //легальность
+        if (i !in notTrash) throw IllegalArgumentException()
+    }
 
     val input = expression.split(" ")
 
@@ -289,7 +271,7 @@ fun plusMinus(expression: String): Int {
 
     val a = "1234567890"
 
-    fun trysumm(n: Int): Int {  //пытается вернуть Int (без знака)
+    fun trySumm(n: Int): Int {  //пытается вернуть Int (без знака)
         for (i in input[n]) {   //используется потому что "+2" переводится в инт
             if (i !in a) throw IllegalArgumentException()
         }
@@ -297,12 +279,12 @@ fun plusMinus(expression: String): Int {
     }
 
     var n = 0
-    var answer = trysumm(n)
+    var answer = trySumm(n)
     for (i in 1..(input.size - 1) / 2) {
         n = 2 * i
         when {
-            input[2 * i - 1] == "+" -> answer += trysumm(n)
-            input[2 * i - 1] == "-" -> answer -= trysumm(n)
+            input[2 * i - 1] == "+" -> answer += trySumm(n)
+            input[2 * i - 1] == "-" -> answer -= trySumm(n)
             else -> throw IllegalArgumentException()
         }
     }
@@ -342,7 +324,9 @@ fun firstDuplicateIndex(str: String): Int {
  * Все цены должны быть больше либо равны нуля.
  */
 fun mostExpensive(description: String): String {
-    if (description == "") return ""
+    val legal = description.contains(Regex("""^([А-Я][а-я]* \d*.\d*;? ?)*$"""))
+
+    if (description == "" || !legal) return ""
 
     val input = description.split("; ")         //по парам имя - цена
     val list = mutableListOf<String>()          //2n - имя     2n+1 - цена
@@ -353,10 +337,8 @@ fun mostExpensive(description: String): String {
         list.add(minilist[1])
     }
 
-    if (list.size % 2 != 0) return ""           //если не по парам
-
     var answer = ""
-    var biggestPrice = -0.000000000000000000000001
+    var biggestPrice = -0.000000000000000000000000000000000000000000000000000001
 
     for (i in 0 until list.size / 2) {
         try {                                   //попытка сравнить цену с наибольшей
@@ -512,21 +494,17 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
                     return
                 }
             }
-
             counter++
             if (mainList[cellsNow] != 0) {   //начинаю не пустой цикл
                 actionNow++
                 val actionAgain = actionNow
                 while ((commands[actionNow] != ']' || mainList[cellsNow] != 0) && counter < limit) { //когда встерчается   ] и 0  - закочнить
-
                     if (commands[actionNow] == ']') { //встретился конец цикла без 0. начинай с начала
                         actionNow = actionAgain
                         counter++
                     } else {
                         oneAction()
-
                     }
-
                 }
             } else {   //пропускаю цикл
                 actionNow++
@@ -540,9 +518,7 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
                     actionNow++
                 }
             }
-
         }
-
 
         if (counter < limit && actionNow <= commands.length - 1) {  //эта проверка требуется при работе внутри цикла
             when (commands[actionNow]) {
@@ -558,10 +534,9 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
             if (cellsNow == cells || cellsNow < 0) throw IllegalStateException() //выход за конвейер
             counter++
             actionNow++
-
         }
 //             смещение (<>) изменение (+-) начало цикла ([. не срабатывает дважды)
-//             если сюда попала ], то она не делает ничего, тк раз она сюда попала,    counter и actionNow только тут и после открытия скобки!!!!
+//             если сюда попала ], то она не делает ничего, тк раз она сюда попала,
 //             то цикл закрылся. НО счетчик ее считает и переходит на следующую команду
     }
     while (counter < limit && actionNow <= commands.length - 1) {

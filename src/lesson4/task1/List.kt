@@ -342,7 +342,7 @@ fun roman(n: Int): String {
 fun russian(n: Int): String {
     val a = n / 1000
     val b = n % 1000
-    var ans = StringBuilder()
+    val ans = StringBuilder()
     val hundreds = listOf(
         "",
         " сто",

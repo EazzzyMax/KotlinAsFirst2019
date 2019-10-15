@@ -3,6 +3,7 @@
 package lesson6.task1
 
 import lesson2.task2.daysInMonth
+import kotlin.math.abs
 
 /**
  * Пример
@@ -517,6 +518,7 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
                     }
                     actionNow++
                 }
+                counter-- //что бы пропуск цикла посчитался за одно дейтвие а не за два
             }
         }
 
@@ -531,6 +533,7 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
                     //пробел. не делать ничего
                 }
             }
+            println("$cellsNow $mainList")
             if (cellsNow == cells || cellsNow < 0) throw IllegalStateException() //выход за конвейер
             counter++
             actionNow++

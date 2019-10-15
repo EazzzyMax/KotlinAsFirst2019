@@ -479,9 +479,8 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     var counter = 0            //счетчик действий
     var actionNow = 0          //номер команды
 
-    fun oneAction(): Unit {
-
-        fun cycle(): Unit { //отдает ]. [ считает сам
+    fun oneAction() {
+        fun cycle() { //отдает ]. [ считает сам
             if (commands[actionNow + 1] == ']') { //если цикл пустой []
                 if (mainList[cellsNow] == 0) {    //пропуск
                     actionNow++

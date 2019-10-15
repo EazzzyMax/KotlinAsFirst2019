@@ -378,7 +378,7 @@ fun fromRoman(roman: String): Int {
     var now: Int
     var next: Int
 
-    for (i in 0 until roman.length - 1) {     //перебор попарно 0-1 1-2 2-3
+    for (i in 0 until roman.length - 1) {     //перебор попарно 0-1 1-2 2- 3
         now = map.getOrDefault(roman[i], 0)
         next = map.getOrDefault(roman[i + 1], 0)
 

@@ -307,7 +307,7 @@ fun decimalFromString(str: String, base: Int): Int {
  */
 fun roman(n: Int): String {
     var n1 = n
-    var str = ""
+    val str = StringBuilder()
     val list = mapOf(
         1000 to "M",
         900 to "CM",
@@ -325,11 +325,11 @@ fun roman(n: Int): String {
     )
     for ((left, right) in list) {
         for (i in 1..n1 / left) {
-            str += right
+            str.append(right)
         }
         n1 %= left
     }
-    return str
+    return str.toString()
 }
 
 /**

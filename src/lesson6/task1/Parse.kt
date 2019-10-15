@@ -3,7 +3,6 @@
 package lesson6.task1
 
 import lesson2.task2.daysInMonth
-import kotlin.math.abs
 
 /**
  * Пример
@@ -226,19 +225,19 @@ fun bestHighJump(jumps: String): Int {
         if (i !in notTrash) return -1
     }
 
-    val list0 = jumps.split(" ")
-    if (list0.size % 2 != 0) return -1 //если нечетное (не будет пары)
+    val list = jumps.split(" ")
+    if (list.size % 2 != 0) return -1 //если нечетное (не будет пары)
 
-    val list1 = mutableListOf<String>()
+    val successfulJumps = mutableListOf<String>()
 
-    for (i in 0 until list0.size / 2) {  //создаю лист с успешными прыжками, !!!но мб длина некорректна!!!
-        if ("+" in list0[2 * i + 1])
-            list1.add(list0[2 * i])
+    for (i in 0 until list.size / 2) {  //создаю лист с успешными прыжками, !!!но мб длина некорректна!!!
+        if ("+" in list[2 * i + 1])
+            successfulJumps.add(list[2 * i])
     }
 
     var maxx = -1
 
-    for (i in list1) {
+    for (i in successfulJumps) {
         val x = i.toIntOrNull()
         if (x != null) {
             if (x > maxx) maxx = x
@@ -333,22 +332,19 @@ fun mostExpensive(description: String): String {
     val list = mutableListOf<String>()          //2n - имя     2n+1 - цена
 
     for (i in 0 until input.size) {
-        val minilist = input[i].split(" ")
-        list.add(minilist[0])
-        list.add(minilist[1])
+        val miniList = input[i].split(" ")
+        list.add(miniList[0])
+        list.add(miniList[1])
     }
 
     var answer = ""
     var biggestPrice = -0.000000000000000000000000000000000000000000000000000001
 
     for (i in 0 until list.size / 2) {
-        try {                                   //попытка сравнить цену с наибольшей
-            if (list[2 * i + 1].toDouble() > biggestPrice) {
-                biggestPrice = list[2 * i + 1].toDouble()
-                answer = list[2 * i]
-            }
-        } catch (e: NumberFormatException) {
-            return ""
+        val x = list[2 * i + 1].toDoubleOrNull() ?: return ""
+        if (x > biggestPrice) {
+            biggestPrice = x
+            answer = list[2 * i]
         }
     }
     return answer
@@ -376,7 +372,7 @@ fun fromRoman(roman: String): Int {
     }
 
     var answer = 0
-    var tumblerIXC = 0 //во избежание двух подряд на возрастание IXC
+    var tumblerIXC = false //во избежание двух подряд на возрастание IXC
     var tumblerIIII = 0
 
     var now: Int
@@ -389,16 +385,16 @@ fun fromRoman(roman: String): Int {
         if ((now.toString())[0] == '1' && tumblerIIII < 3) {                        //1000 100 10 1
 
             if (next == now * 10 || next == now * 5) {         //если этот меньше следующего в 5/10 раз (вычитание)
-                if (tumblerIXC == 1) {                           //если до этого уже шло вычитание (IX / CD) - сброс
+                if (tumblerIXC) {                           //если до этого уже шло вычитание (IX / CD) - сброс
                     println(1)
                     return -1
                 } else {                                         //вычитаю и активирую тумблер
                     answer -= now
-                    tumblerIXC = 1
+                    tumblerIXC = true
                 }
             } else if (next < now) {                           //если этот больше следующего
                 answer += now
-                tumblerIXC = 0
+                tumblerIXC = false
                 tumblerIIII = 0
             } else if (next == now) {
                 answer += now
@@ -409,10 +405,10 @@ fun fromRoman(roman: String): Int {
             }
 
         } else if (now > next) {           //5 50 500 если не шли до этого
-            if (now == next) return -1  //две подряд 5 5 50 50 500 500 нельзя
+            if (now == next) return -1     //две подряд 5 5 50 50 500 500 нельзя
             answer += now
             tumblerIIII = 0
-            tumblerIXC = 0
+            tumblerIXC = false
 
         } else {                                                 //если 5 50 500 шли до этого - сброс
             return -1
@@ -547,10 +543,4 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     }
     return (mainList)
 }
-
-/**
-пока не достигнут лимит или не выполненны все команды выполняю команду oneAction. oneAction может вызвать cycle.
-
-
- */
 

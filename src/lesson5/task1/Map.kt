@@ -250,11 +250,9 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  *   canBuildFrom(listOf('a', 'b', 'o'), "baobab") -> true
  */
 fun canBuildFrom(chars: List<Char>, word: String): Boolean {
-    val cSet = chars.toSet()
-    for (charnow in word) {
-        if (charnow !in cSet && charnow.toUpperCase() !in cSet && charnow.toLowerCase() !in cSet) return false
-    }
-    return true
+    val cSet = chars.map { it.toLowerCase() }.toSet()
+    val cWord = word.map { it.toLowerCase() }.toSet()
+    return cWord.intersect(cSet) == cWord
 }
 
 /**
@@ -376,20 +374,9 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
-    if (list.size < 2) return -1 to -1
-    if (list.max()!! * 2 < number) return -1 to -1
-    if (list.min()!! * 2 > number) return -1 to -1
-    //проверяю не состоит ли number из двух равных чисел, чтобы дальше работать с множествами
-    if (number % 2 == 0) {
-        if (list.indexOf(number / 2) != list.lastIndexOf(number / 2)) {
-            return list.indexOf(number / 2) to list.lastIndexOf(number / 2)
-        }
-    }
-    val newSet = list.toSet()
-    for (i in newSet) {
-        if ((number - i) in newSet && list.indexOf(i) != list.indexOf(number - i)) {
-            return list.indexOf(i) to list.indexOf(number - i)
-        }
+    for (num in list) {
+        if (list.any { it == number - num } && list.indexOf(num) != list.lastIndexOf(number - num))
+            return list.indexOf(num) to list.lastIndexOf(number - num)
     }
     return -1 to -1
 }

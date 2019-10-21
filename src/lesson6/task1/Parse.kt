@@ -219,17 +219,13 @@ fun bestLongJump(jumps: String): Int {
  * вернуть -1.
  */
 fun bestHighJump(jumps: String): Int {
-    val notTrash = "01234567890+%- "
 
-    for (i in jumps) { //на наличие левых символов
-        if (i !in notTrash) return -1
-    }
+    val legal = ("$jumps ").contains(Regex("""^(\d* (\+?-?%?)* )*$"""))
+    if (!legal) return -1
 
     val list = jumps.split(" ")
-    if (list.size % 2 != 0) return -1 //если нечетное (не будет пары)
 
     val successfulJumps = mutableListOf<String>()
-
     for (i in 0 until list.size / 2) {  //создаю лист с успешными прыжками, !!!но мб длина некорректна!!!
         if ("+" in list[2 * i + 1])
             successfulJumps.add(list[2 * i])
@@ -267,13 +263,15 @@ fun plusMinus(expression: String): Int {
 
     val input = expression.split(" ")
 
-    if (input.size % 2 == 0) throw IllegalArgumentException()  //шоб А + А + А + А было (нечет)
+    if (input.size % 2 == 0)
+        throw IllegalArgumentException()  //шоб А + А + А + А было (нечет)
 
     val a = "1234567890"
 
     fun trySumm(n: Int): Int {  //пытается вернуть Int (без знака)
         for (i in input[n]) {   //используется потому что "+2" переводится в инт
-            if (i !in a) throw IllegalArgumentException()
+            if (i !in a)
+                throw IllegalArgumentException()
         }
         return input[n].toInt()
     }
@@ -304,9 +302,8 @@ fun firstDuplicateIndex(str: String): Int {
     val input = str.split(" ")
     var len = 0
     for (i in 0 until input.size - 1) {
-        if (input[i].toUpperCase() == input[i + 1].toUpperCase()) {
+        if (input[i].toUpperCase() == input[i + 1].toUpperCase())
             return len
-        }
         len += input[i].length + 1  // +1 с учетом пробела
     }
     return -1
@@ -324,7 +321,7 @@ fun firstDuplicateIndex(str: String): Int {
  * Все цены должны быть больше либо равны нуля.
  */
 fun mostExpensive(description: String): String {
-    val legal = description.contains(Regex("""^([А-Я][а-я]* \d*.\d*;? ?)*$"""))
+    val legal = ("$description; ").contains(Regex("""^([А-Я][а-я]* \d*.\d*; )*$"""))
 
     if (description == "" || !legal) return ""
 
@@ -517,6 +514,7 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
             }
         }
 
+        //oneAction
         if (counter < limit && actionNow <= commands.length - 1) {  //эта проверка требуется при работе внутри цикла
             when (commands[actionNow]) {
                 '>' -> cellsNow++
@@ -525,7 +523,7 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
                 '-' -> mainList[cellsNow]--
                 '[' -> cycle() //запускается цикл, который выше
                 else -> {
-                    //пробел. не делать ничего
+                    //пробел или выход из цикла. не делать ничего
                 }
             }
             println("$cellsNow $mainList")
@@ -537,9 +535,11 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
 //             если сюда попала ], то она не делает ничего, тк раз она сюда попала,
 //             то цикл закрылся. НО счетчик ее считает и переходит на следующую команду
     }
+
     while (counter < limit && actionNow <= commands.length - 1) {
         oneAction()
     }
+
     return (mainList)
 }
 

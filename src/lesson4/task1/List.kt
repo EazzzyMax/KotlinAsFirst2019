@@ -382,15 +382,15 @@ fun russian(n: Int): String {
     var units = listOf("", " одна", " две", " три", " четыре", " пять", " шесть", " семь", " восемь", " девять")
 
     fun rus1(n: Int): String {
-        var string = ""
-        string += hundreds[n / 100]
+        val string = StringBuilder()
+        string.append(hundreds[n / 100])
         if (n % 100 in 11..19) {
-            string += dozens1[n % 10]
+            string.append(dozens1[n % 10])
         } else {
-            string += dozens[n / 10 % 10]
-            string += units[n % 10]
+            string.append(dozens[n / 10 % 10])
+            string.append(units[n % 10])
         }
-        return string
+        return string.toString()
     }
 
     fun ageDescription(age: Int): String {

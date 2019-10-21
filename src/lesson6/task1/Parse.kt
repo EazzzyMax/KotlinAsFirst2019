@@ -539,6 +539,7 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     while (counter < limit && actionNow <= commands.length - 1) {
         oneAction()
     }
+
     return (mainList)
 }
 

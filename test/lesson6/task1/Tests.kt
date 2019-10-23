@@ -126,6 +126,12 @@ class Tests {
         assertEquals(694, fromRoman("DCXCIV"))
         assertEquals(49, fromRoman("XLIX"))
         assertEquals(-1, fromRoman("Z"))
+        assertEquals(-1, fromRoman("VV"))
+        assertEquals(-1, fromRoman("IIIII"))
+        assertEquals(-1, fromRoman("IIII"))
+        assertEquals(3, fromRoman("III"))
+        assertEquals(333, fromRoman("CCCXXXIII"))
+        assertEquals(338, fromRoman("CCCXXXVIII"))
         assertEquals(2283, fromRoman("MMCCLXXXIII"))
         assertEquals(1583, fromRoman("MDLXXXIII"))
     }

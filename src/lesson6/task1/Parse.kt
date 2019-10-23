@@ -379,7 +379,7 @@ fun fromRoman(roman: String): Int {
         now = map.getOrDefault(roman[i], 0)
         next = map.getOrDefault(roman[i + 1], 0)
 
-        if ((now.toString())[0] == '1' && tumblerIIII < 3) {                        //1000 100 10 1
+        if ((now.toString())[0] == '1' && tumblerIIII < 2) {                        //1000 100 10 1
 
             if (next == now * 10 || next == now * 5) {         //если этот меньше следующего в 5/10 раз (вычитание)
                 if (tumblerIXC) {                           //если до этого уже шло вычитание (IX / CD) - сброс
@@ -402,7 +402,6 @@ fun fromRoman(roman: String): Int {
             }
 
         } else if (now > next) {           //5 50 500 если не шли до этого
-            if (now == next) return -1     //две подряд 5 5 50 50 500 500 нельзя
             answer += now
             tumblerIIII = 0
             tumblerIXC = false
@@ -453,7 +452,6 @@ fun fromRoman(roman: String): Int {
  *
  */
 fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
-    println("старт")
     //проверка на легальность
     val notTrash = "<>+-[] "
     for (i in commands) { //легальные символы
@@ -526,7 +524,6 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
                     //пробел или выход из цикла. не делать ничего
                 }
             }
-            println("$cellsNow $mainList")
             if (cellsNow == cells || cellsNow < 0) throw IllegalStateException() //выход за конвейер
             counter++
             actionNow++

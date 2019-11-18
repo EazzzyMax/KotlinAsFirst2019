@@ -101,8 +101,7 @@ fun dateStrToDigit(str: String): String {
 
     if (input.size != 3) return ""
 
-    var day: Int?
-    day = null
+    val day: Int?
     val month: Int
     val year: Int?
 
@@ -181,7 +180,7 @@ fun flattenPhoneNumber(phone: String): String {
     for (i in phone) { //удаляю лишнее
         if (i in motTrash) phoneList.add(i)
     }
-
+    println(phoneList.joinToString(separator = ""))
     return (phoneList.joinToString(separator = ""))
 }
 

@@ -327,18 +327,35 @@ fun hasAnagrams(words: List<String>): Boolean {
  *        )
  */
 fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> {
-    val first = mutableSetOf<String>()
-    val last = mutableMapOf<String, Set<String>>()
-    for ((key, value) in friends) {
-        first += value
-        for (name in first)
-            first += friends.getOrDefault(name, setOf())
-        print(first)
-        println("!")
-        last[key] = last.getOrDefault(key, setOf()) + first
-        first.clear()
+    val all = mutableSetOf<String>() //список всех хз зачем
+    for ((left, right) in friends) {
+        all += left
+        all += right
     }
-    return last
+    val answer = mutableMapOf<String, Set<String>>()
+    for ((left, right) in friends) {
+        val allfriends = mutableSetOf<String>() //то что верну в answer[left]
+        val afriends = mutableSetOf<String>() //ОБСЛЕДОВАННЫЕ друзья, чьих друзей я добавил. к ним я больше не обращаюсь
+        val bfriends = mutableSetOf<String>() //НЕОБСЛЕДОВАННЫЕ друзья, чьих друзей я еще НЕ добавил.
+        bfriends += right
+        allfriends += right
+        while (bfriends.size != 0) {
+            afriends += bfriends
+            for (name in bfriends) {
+                allfriends += friends[name] ?: setOf()
+            }
+            bfriends += allfriends
+            bfriends.removeAll(afriends)
+        }
+        allfriends.remove(left)
+        answer[left] = allfriends
+
+
+    }
+    for (z in all) {
+        answer[z] = answer.getOrDefault(z, setOf())
+    }
+    return answer
 }
 
 

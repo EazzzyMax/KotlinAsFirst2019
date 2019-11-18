@@ -86,12 +86,23 @@ val months = listOf(
     "декабря"
 )
 
+fun dayz(month: Int, year: Int, input: List<String>): Int? {
+    val rightDay = daysInMonth(month, year) //количество дней в месяце
+    val dayQ = input[0].toIntOrNull()
+    if (dayQ != null) {
+        if (dayQ > rightDay || dayQ <= 0) return null
+    }
+    return dayQ
+}
+
+
 fun dateStrToDigit(str: String): String {
     val input = str.split(" ")
 
     if (input.size != 3) return ""
 
-    val day: Int?
+    var day: Int?
+    day = null
     val month: Int
     val year: Int?
 
@@ -106,13 +117,10 @@ fun dateStrToDigit(str: String): String {
         month = months.indexOf(input[1]) + 1
     } else return ""
 
-    val rightDay = daysInMonth(month, year) //количество дней в месяце
 
-
-    day = input[0].toIntOrNull()
+    //фомат дня !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+    day = dayz(month, year, input)
     if (day == null) return ""
-    if (day > rightDay || day < 0) return ""
-
 
     return String.format("%02d.%02d.%d", day, month, year)
 }
@@ -143,12 +151,8 @@ fun dateDigitToStr(digital: String): String {
     year = input[2].toIntOrNull()
     if (year == null) return ""
 
-
-    //формат дня?
-    val rightDay = daysInMonth(month, year)
-    day = input[0].toIntOrNull()
-    if (day == null || day > rightDay || day < 0) return ""
-
+    day = dayz(month, year, input)
+    if (day == null) return ""
 
     return String.format("%d %s %d", day, months[month - 1], year)
 }
@@ -220,7 +224,9 @@ fun bestLongJump(jumps: String): Int {
  */
 fun bestHighJump(jumps: String): Int {
 
-    val legal = ("$jumps ").contains(Regex("""^(\d* (\+?-?%?)* )*$"""))
+    //val legal = ("$jumps ").contains(Regex("""^(\d* (\+?-?%?)* )*$"""))
+    val legal = ("$jumps ").contains(Regex("""^(\d+ [+%\-]{1,3} )+$"""))
+
     if (!legal) return -1
 
     val list = jumps.split(" ")
@@ -321,7 +327,7 @@ fun firstDuplicateIndex(str: String): Int {
  * Все цены должны быть больше либо равны нуля.
  */
 fun mostExpensive(description: String): String {
-    val legal = ("$description; ").contains(Regex("""^([А-Я][а-я]* \d*.\d*; )*$"""))
+    val legal = ("$description; ").contains(Regex("""^([А-Я][а-я]* \d+.\d; )*$"""))
 
     if (description == "" || !legal) return ""
 
@@ -397,7 +403,6 @@ fun fromRoman(roman: String): Int {
                 answer += now
                 tumblerIIII += 1
             } else {
-                println(2)
                 return -1
             }
 
@@ -410,7 +415,7 @@ fun fromRoman(roman: String): Int {
             return -1
         }
     }
-    answer += map[roman[roman.length - 1]] ?: error("")
+    answer += map[roman[roman.length - 1]]!!
     return answer
 }
 

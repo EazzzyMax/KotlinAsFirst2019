@@ -327,34 +327,20 @@ fun hasAnagrams(words: List<String>): Boolean {
  *        )
  */
 fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> {
-    val all = mutableSetOf<String>() //список всех хз зачем
-    for ((left, right) in friends) {
-        all += left
-        all += right
+    val first = mutableSetOf<String>()
+    val last = mutableMapOf<String, Set<String>>()
+    for ((key, value) in friends) {
+        first += value
+        for (name in first)
+            first += friends.getOrDefault(name, setOf())
+        print(first)
+        println("!")
+        last[key] = last.getOrDefault(key, setOf()) + first
+        first.clear()
     }
-    val answer = mutableMapOf<String, Set<String>>()
-    for ((left, right) in friends) {
-        val allFriends = mutableSetOf<String>() //то что верну в answer[left]
-        val aFriends = mutableSetOf<String>() //ОБСЛЕДОВАННЫЕ друзья, чьих друзей я добавил. к ним я больше не обращаюсь
-        val bFriends = mutableSetOf<String>() //НЕОБСЛЕДОВАННЫЕ друзья, чьих друзей я еще НЕ добавил.
-        bFriends += right
-        allFriends += right
-        while (bFriends.size != 0) {
-            aFriends += bFriends
-            for (name in bFriends) {
-                allFriends += friends[name] ?: setOf()
-            }
-            bFriends += allFriends
-            bFriends.removeAll(aFriends)
-        }
-        allFriends.remove(left)
-        answer[left] = allFriends
-    }
-    for (z in all) {
-        answer[z] = answer.getOrDefault(z, setOf())
-    }
-    return answer
+    return last
 }
+
 
 /**
  * Сложная
@@ -374,8 +360,9 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
+    val newList = list.toSet()
     for (num in list) {
-        if (list.any { it == number - num } && list.indexOf(num) != list.lastIndexOf(number - num))
+        if (newList.any { it == number - num } && newList.indexOf(num) != newList.lastIndexOf(number - num))
             return list.indexOf(num) to list.lastIndexOf(number - num)
     }
     return -1 to -1
@@ -407,7 +394,7 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
     //                                 |      |          |      ||||||
     //                                имя nowCapacity   цена список сокровищ
 
-    var previousname = "надеюсь такого имени в ваших входных данных не будет, ведь правда?"
+    var previousName = "надеюсь такого имени в ваших входных данных не будет, ведь правда?"
     for ((name, digits) in treasures) {   //name - название   digits.first - вес   digits.second - цена
         val price = digits.second
         val weight = digits.first
@@ -417,26 +404,26 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
 
                 //достаю цену из ячейки из предыдущей строки с максимальным весом и складываю с нынешней (newcost)
                 //сравниваю с ценой в верхней ячейке (oldcost)
-                val newcost = price + ((mainList[previousname to nowCapacity - weight])?.first ?: 0)
-                val oldcost = ((mainList[previousname to nowCapacity])?.first ?: 0)
+                val newCost = price + ((mainList[previousName to nowCapacity - weight])?.first ?: 0)
+                val oldCost = ((mainList[previousName to nowCapacity])?.first ?: 0)
 
-                if (newcost > oldcost) { //если новая стоимость больше
+                if (newCost > oldCost) { //если новая стоимость больше
                     mainList[name to nowCapacity] =  //беру из той же ячейки тока не first, a second      + name
-                        newcost to (((mainList[previousname to nowCapacity - weight])?.second ?: listOf()) + name)
+                        newCost to (((mainList[previousName to nowCapacity - weight])?.second ?: listOf()) + name)
 
                 } else { //если старая стоимость больше переношу верхнюю ячейку вниз целиком
                     mainList[name to nowCapacity] =
-                        oldcost to ((mainList[previousname to nowCapacity])?.second ?: listOf())
+                        oldCost to ((mainList[previousName to nowCapacity])?.second ?: listOf())
                 }
 
             } else { //если не впихнулось
-                val oldcost = ((mainList[previousname to nowCapacity])?.first ?: 0)
+                val oldCost = ((mainList[previousName to nowCapacity])?.first ?: 0)
                 mainList[name to nowCapacity] =
-                    oldcost to ((mainList[previousname to nowCapacity])?.second ?: listOf())
+                    oldCost to ((mainList[previousName to nowCapacity])?.second ?: listOf())
             }
 
         }
-        previousname = name
+        previousName = name
     }
-    return ((mainList[previousname to capacity])?.second ?: listOf()).toSet()
+    return ((mainList[previousName to capacity])?.second ?: listOf()).toSet()
 }

@@ -19,26 +19,26 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
     val outputStream = File(outputName).bufferedWriter()
     var currentLineLength = 0
     for (line in File(inputName).readLines()) {
-        if (line.isEmpty()) {
-            outputStream.newLine()
+        if (line.isEmpty()) {                         //ето получается сюда залетаю када строчка пустая
+            outputStream.newLine()                    //а ну вопщем удаляю кучу лишних пустых строчек оставляю одну да скипаю поулчается континуе
             if (currentLineLength > 0) {
                 outputStream.newLine()
                 currentLineLength = 0
             }
             continue
         }
-        for (word in line.split(" ")) {
-            if (currentLineLength > 0) {
-                if (word.length + currentLineLength >= lineLength) {
-                    outputStream.newLine()
-                    currentLineLength = 0
+        for (word in line.split(" ")) {             //хоба парсим на словечечки
+            if (currentLineLength > 0) {            //ну типа если  уже чото написал
+                if (word.length + currentLineLength >= lineLength) {  //а ето типа если уже не влазит
+                    outputStream.newLine() //создал
+                    currentLineLength = 0 //обнулил
                 } else {
-                    outputStream.write(" ")
-                    currentLineLength++
+                    outputStream.write(" ") //пробел
+                    currentLineLength++ //щетчик
                 }
             }
-            outputStream.write(word)
-            currentLineLength += word.length
+            outputStream.write(word) //словечечко
+            currentLineLength += word.length //щетчик
         }
     }
     outputStream.close()

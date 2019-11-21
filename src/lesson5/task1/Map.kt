@@ -355,6 +355,7 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
     for (z in all) {
         answer[z] = answer.getOrDefault(z, setOf())
     }
+    print("push")
     return answer
 }
 

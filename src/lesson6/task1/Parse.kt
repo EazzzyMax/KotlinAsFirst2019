@@ -180,7 +180,7 @@ fun flattenPhoneNumber(phone: String): String {
     for (i in phone) { //удаляю лишнее
         if (i in motTrash) phoneList.add(i)
     }
-    println(phoneList.joinToString(separator = ""))
+
     return (phoneList.joinToString(separator = ""))
 }
 
@@ -326,7 +326,8 @@ fun firstDuplicateIndex(str: String): Int {
  * Все цены должны быть больше либо равны нуля.
  */
 fun mostExpensive(description: String): String {
-    val legal = ("$description; ").contains(Regex("""^([А-Я][а-я]* \d+.\d; )*$"""))
+    val legal = ("$description; ").contains(Regex("""^([А-Я,а-я,A-Z,a-z,0-9]+ \d*.\d*; )*$"""))
+
 
     if (description == "" || !legal) return ""
 
@@ -544,6 +545,3 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     return (mainList)
 }
 
-fun help() {
-  help()
-}

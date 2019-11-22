@@ -169,7 +169,47 @@ fun centerFile(inputName: String, outputName: String) {
  * 8) Если входной файл удовлетворяет требованиям 1-7, то он должен быть в точности идентичен выходному файлу
  */
 fun alignFileByWidth(inputName: String, outputName: String) {
-    TODO()
+    val outputStream = File(outputName).bufferedWriter()
+    val input = File(inputName).readLines().map { it.split(" ").map { it.trim() }.filter { it.isNotEmpty() } }
+    //имею готовйы список строк (строка - список слов без пробелов)
+//    for (str in input) {
+//        for (word in str) {
+//            print(word)
+//            print(" ")
+//        }
+//        println()
+//    }
+    val maxString = input.maxBy { it.map { it.length }.sum() + it.size - 1 }
+    val maxLen = maxString!!.sumBy { it.length } + maxString.size - 1
+    for (str in input) {
+        val toAns = StringBuilder()
+        if (str.size > 1) {
+            val noSpace = str.sumBy { it.length }
+            val lot = str.size - 1 //lot - количество "дырок" 5
+            val space = maxLen - noSpace   //space - то скок надо распределить на "дырки" 27
+            val inFirstCycle = space / lot + 1
+            val inSecondCycle = inFirstCycle - 1
+            val firstCycle = space - inSecondCycle * lot
+            val secondCycle = lot + 1 - firstCycle
+            for (i in 0 until firstCycle) {
+                toAns.append(str[i])
+                for (i in 1..inFirstCycle) toAns.append(" ")
+            }
+            for (i in 0 until secondCycle) {
+                toAns.append(str[firstCycle + i])
+                for (i in 1..inSecondCycle) toAns.append(" ")
+            }
+
+        } else if (str.size == 1) {
+            for (i in 1..maxLen - str[0].length) toAns.append(" ")
+            toAns.append(str[0])
+        } else {
+            for (i in 1..maxLen) toAns.append(" ")
+        }
+        outputStream.write(toAns.toString().trim())
+        outputStream.newLine()
+    }
+    outputStream.close()
 }
 
 /**

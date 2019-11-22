@@ -526,6 +526,24 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
  *
  */
 fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
-    TODO()
+    val ans = lhv / rhv
+    val output = File(outputName).bufferedWriter()
+    output.write(" ")
+    output.write(lhv.toString())
+    output.write(" | ")
+    output.write(rhv.toString())
+    output.newLine()
+
+    val space = 0
+
+    for (i in 1..ans.toString().length) {
+        for (z in 0 until space) {
+
+        }
+    }
+
+
+
+    output.close()
 }
 

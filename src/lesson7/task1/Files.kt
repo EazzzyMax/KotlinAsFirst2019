@@ -3,6 +3,7 @@
 package lesson7.task1
 
 import java.io.File
+import java.lang.StringBuilder
 
 /**
  * Пример
@@ -55,13 +56,12 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
  */
 fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> {
     val input = File(inputName).readLines()
-    val answer = substrings.map { it to 0 }.toMap().toMutableMap()
+    val answer = substrings.toSet().map { it to 0 }.toMap().toMutableMap()
     for (str in input) { //по строчечкам
         for (wordZ in str.split(" ")) { //по словечечкам
-            for (search in substrings) {  //проверяю каждую тупа по отдельности есть ли в слове
-                var word = wordZ.toLowerCase()
-                for (i in 0..word.length - search.length) {
-                    if (word.substring(i, i + search.length) == search.toLowerCase()) {
+            for (search in substrings.toSet()) {  //проверяю каждую тупа по отдельности есть ли в слове
+                for (i in 0..wordZ.toLowerCase().length - search.length) {
+                    if (wordZ.toLowerCase().substring(i, i + search.length) == search.toLowerCase()) {
                         answer[search] = answer.getOrDefault(search, 0) + 1
                     }
                 }
@@ -88,7 +88,7 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
 fun sibilants(inputName: String, outputName: String) {
 
     fun action1(z: Int, string: String): Char {
-        if (string[z - 1].toLowerCase() == 'ж' || string[z - 1].toLowerCase() == 'ш') {
+        if (string[z - 1].toLowerCase() == 'ж' || string[z - 1].toLowerCase() == 'ш' || string[z - 1].toLowerCase() == 'ч' || string[z - 1].toLowerCase() == 'щ') {
             if (string[z] == 'ы') return 'и'
             if (string[z] == 'Ы') return 'И'
             if (string[z] == 'я') return 'а'
@@ -97,19 +97,12 @@ fun sibilants(inputName: String, outputName: String) {
             if (string[z] == 'Ю') return 'У'
         }
 
-        if (string[z - 1].toLowerCase() == 'ч' || string[z - 1].toLowerCase() == 'щ') {
-            if (string[z] == 'я') return 'а'
-            if (string[z] == 'Я') return 'А'
-            if (string[z] == 'ю') return 'у'
-            if (string[z] == 'Ю') return 'У'
-        }
         return string[z]
     }
 
     val outputStream = File(outputName).bufferedWriter()
     val input = File(inputName).readLines()
     for (str in input) {
-        println(str)
         outputStream.write(str[0].toString())
         for (i in 1 until str.length) {
             outputStream.write(action1(i, str).toString())
@@ -138,7 +131,14 @@ fun sibilants(inputName: String, outputName: String) {
  *
  */
 fun centerFile(inputName: String, outputName: String) {
-    TODO()
+    val outputStream = File(outputName).bufferedWriter()
+    val input = File(inputName).readLines().map { it.trim() } //имею текст без пробелов в массиве по строчкам
+    val maxLength = input.maxBy { it.length }!!.length  //имею макс длину
+    for (str in input) {
+        outputStream.write(str.padStart((maxLength - str.length) / 2 + str.length))
+        outputStream.newLine()
+    }
+    outputStream.close()
 }
 
 /**

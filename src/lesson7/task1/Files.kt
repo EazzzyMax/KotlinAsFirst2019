@@ -132,6 +132,11 @@ fun sibilants(inputName: String, outputName: String) {
  */
 fun centerFile(inputName: String, outputName: String) {
     val outputStream = File(outputName).bufferedWriter()
+    if (File(inputName).readLines().isEmpty()) {
+        outputStream.write("")
+        outputStream.close()
+        return
+    }
     val input = File(inputName).readLines().map { it.trim() } //имею текст без пробелов в массиве по строчкам
     val maxLength = input.maxBy { it.length }!!.length  //имею макс длину
     for (str in input) {
@@ -170,6 +175,11 @@ fun centerFile(inputName: String, outputName: String) {
  */
 fun alignFileByWidth(inputName: String, outputName: String) {
     val outputStream = File(outputName).bufferedWriter()
+    if (File(inputName).readLines().isEmpty()) {
+        outputStream.write("")
+        outputStream.close()
+        return
+    }
     val input = File(inputName).readLines().map { it.split(" ").map { it.trim() }.filter { it.isNotEmpty() } }
     //имею готовйы список строк (строка - список слов без пробелов)
 //    for (str in input) {
@@ -183,28 +193,30 @@ fun alignFileByWidth(inputName: String, outputName: String) {
     val maxLen = maxString!!.sumBy { it.length } + maxString.size - 1
     for (str in input) {
         val toAns = StringBuilder()
-        if (str.size > 1) {
-            val noSpace = str.sumBy { it.length }
-            val lot = str.size - 1 //lot - количество "дырок" 5
-            val space = maxLen - noSpace   //space - то скок надо распределить на "дырки" 27
-            val inFirstCycle = space / lot + 1
-            val inSecondCycle = inFirstCycle - 1
-            val firstCycle = space - inSecondCycle * lot
-            val secondCycle = lot + 1 - firstCycle
-            for (i in 0 until firstCycle) {
-                toAns.append(str[i])
-                for (i in 1..inFirstCycle) toAns.append(" ")
-            }
-            for (i in 0 until secondCycle) {
-                toAns.append(str[firstCycle + i])
-                for (i in 1..inSecondCycle) toAns.append(" ")
-            }
+        when {
+            str.size > 1 -> {
+                val noSpace = str.sumBy { it.length }
+                val lot = str.size - 1 //lot - количество "дырок" 5
+                val space = maxLen - noSpace   //space - то скок надо распределить на "дырки" 27
+                val inFirstCycle = space / lot + 1 //количество пробелов (тех что больше)
+                val inSecondCycle = inFirstCycle - 1 //количество пробелов (тех что меньше)
+                val firstCycle = space - inSecondCycle * lot //сколько раз по большему количеству пробелов
+                val secondCycle = lot + 1 - firstCycle
+                for (i in 0 until firstCycle) {
+                    toAns.append(str[i])
+                    for (z in 1..inFirstCycle) toAns.append(" ")
+                }
+                for (i in 0 until secondCycle) {
+                    toAns.append(str[firstCycle + i])
+                    for (z in 1..inSecondCycle) toAns.append(" ")
+                }
 
-        } else if (str.size == 1) {
-            for (i in 1..maxLen - str[0].length) toAns.append(" ")
-            toAns.append(str[0])
-        } else {
-            for (i in 1..maxLen) toAns.append(" ")
+            }
+            str.size == 1 -> {
+                for (i in 1..maxLen - str[0].length) toAns.append(" ")
+                toAns.append(str[0])
+            }
+            else -> for (i in 1..maxLen) toAns.append(" ")
         }
         outputStream.write(toAns.toString().trim())
         outputStream.newLine()

@@ -59,10 +59,11 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
     val answer = substrings.toSet().map { it to 0 }.toMap().toMutableMap()
     for (str in input) { //по строчечкам
         for (wordZ in str.split(" ")) { //по словечечкам
-            for (search in substrings.toSet()) {  //проверяю каждую тупа по отдельности есть ли в слове
-                for (i in 0..wordZ.toLowerCase().length - search.length) {
-                    if (wordZ.toLowerCase().substring(i, i + search.length) == search.toLowerCase()) {
-                        answer[search] = answer.getOrDefault(search, 0) + 1
+            val word = wordZ.toLowerCase()
+            for (search in substrings.toSet()) {  //проверяю каждую по отдельности есть ли в слове
+                for (i in 0..word.length - search.length) { //перебор строчки 012 123 234 345 456 ... n-2 n-1 n
+                    if (word.substring(i, i + search.length) == search.toLowerCase()) {
+                        answer[search] = answer[search] ?: 0 + 1
                     }
                 }
             }
@@ -87,7 +88,7 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
  */
 fun sibilants(inputName: String, outputName: String) {
 
-    fun action1(z: Int, string: String): Char {
+    fun action1(z: Int, string: String): Char { //берет букву и выдает нужную
         if (string[z - 1].toLowerCase() == 'ж' || string[z - 1].toLowerCase() == 'ш' || string[z - 1].toLowerCase() == 'ч' || string[z - 1].toLowerCase() == 'щ') {
             if (string[z] == 'ы') return 'и'
             if (string[z] == 'Ы') return 'И'
@@ -96,16 +97,15 @@ fun sibilants(inputName: String, outputName: String) {
             if (string[z] == 'ю') return 'у'
             if (string[z] == 'Ю') return 'У'
         }
-
         return string[z]
     }
 
     val outputStream = File(outputName).bufferedWriter()
     val input = File(inputName).readLines()
-    for (str in input) {
-        outputStream.write(str[0].toString())
-        for (i in 1 until str.length) {
-            outputStream.write(action1(i, str).toString())
+    for (str in input) { //строчки целиком
+        outputStream.write(str[0].toString()) //записывает первый символ
+        for (i in 1 until str.length) { //перебереат все кроме 1
+            outputStream.write(action1(i, str).toString()) //
 
         }
         outputStream.newLine()
@@ -538,8 +538,9 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
 
     for (i in 1..ans.toString().length) {
         for (z in 0 until space) {
-
+            output.write(" ")
         }
+
     }
 
 

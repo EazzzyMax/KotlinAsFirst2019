@@ -88,29 +88,26 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
  */
 fun sibilants(inputName: String, outputName: String) {
 
-    fun action1(z: Int, string: String): Char { //берет букву и выдает нужную
-        if (string[z - 1].toLowerCase() == 'ж' || string[z - 1].toLowerCase() == 'ш' || string[z - 1].toLowerCase() == 'ч' || string[z - 1].toLowerCase() == 'щ') {
-            if (string[z] == 'ы') return 'и'
-            if (string[z] == 'Ы') return 'И'
-            if (string[z] == 'я') return 'а'
-            if (string[z] == 'Я') return 'А'
-            if (string[z] == 'ю') return 'у'
-            if (string[z] == 'Ю') return 'У'
-        }
-        return string[z]
+    fun letterReplace(z: Int, string: String): Char { //берет букву и выдает нужную
+        val set = setOf('ж', 'ш', 'ч', 'щ')
+        val map = mapOf('ы' to 'и', 'Ы' to 'И', 'я' to 'а', 'Я' to 'А', 'ю' to 'у', 'Ю' to 'У')
+        if (string[z - 1].toLowerCase() in set)
+            return (map[string[z]] ?: string[z])
+        return (string[z])
     }
 
-    val outputStream = File(outputName).bufferedWriter()
-    val input = File(inputName).readLines()
-    for (str in input) { //строчки целиком
-        outputStream.write(str[0].toString()) //записывает первый символ
-        for (i in 1 until str.length) { //перебереат все кроме 1
-            outputStream.write(action1(i, str).toString()) //
-
+    val outputStream = File(outputName).bufferedWriter().use {
+        val input = File(inputName).readLines()
+        for (str in input) { //строчки целиком
+            if (str.isNotEmpty()) {
+                it.write(str[0].toString()) //записывает первый символ
+                for (i in 1 until str.length) { //перебереат все кроме 1
+                    it.write(letterReplace(i, str).toString())
+                }
+            }
+            it.newLine()
         }
-        outputStream.newLine()
     }
-    outputStream.close()
 }
 
 /**
@@ -180,15 +177,8 @@ fun alignFileByWidth(inputName: String, outputName: String) {
         outputStream.close()
         return
     }
-    val input = File(inputName).readLines().map { it.split(" ").map { it.trim() }.filter { it.isNotEmpty() } }
+    val input = File(inputName).readLines().map { it.split(" ").filter { it.isNotEmpty() } }
     //имею готовйы список строк (строка - список слов без пробелов)
-//    for (str in input) {
-//        for (word in str) {
-//            print(word)
-//            print(" ")
-//        }
-//        println()
-//    }
     val maxString = input.maxBy { it.map { it.length }.sum() + it.size - 1 }
     val maxLen = maxString!!.sumBy { it.length } + maxString.size - 1
     for (str in input) {
@@ -204,11 +194,13 @@ fun alignFileByWidth(inputName: String, outputName: String) {
                 val secondCycle = lot + 1 - firstCycle
                 for (i in 0 until firstCycle) {
                     toAns.append(str[i])
-                    for (z in 1..inFirstCycle) toAns.append(" ")
+                    for (z in 1..inFirstCycle)
+                        toAns.append(" ")
                 }
                 for (i in 0 until secondCycle) {
                     toAns.append(str[firstCycle + i])
-                    for (z in 1..inSecondCycle) toAns.append(" ")
+                    for (z in 1..inSecondCycle)
+                        toAns.append(" ")
                 }
 
             }

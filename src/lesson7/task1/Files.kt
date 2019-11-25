@@ -96,6 +96,8 @@ fun sibilants(inputName: String, outputName: String) {
             if (string[z] == 'Я') return 'А'
             if (string[z] == 'ю') return 'у'
             if (string[z] == 'Ю') return 'У'
+            if (string[z] == 'Ю') return 'У'
+
         }
         return string[z]
     }

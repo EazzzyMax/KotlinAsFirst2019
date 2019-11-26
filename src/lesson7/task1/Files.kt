@@ -519,13 +519,30 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
  *
  */
 fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
-    val ans = lhv / rhv
     val qw = File(outputName).bufferedWriter()
+    if (lhv < rhv) {
+        qw.write(" ")
+        qw.write(lhv.toString())
+        qw.write(" | ")
+        qw.write(rhv.toString())
+        qw.newLine()
+        for (i in 2..lhv.toString().length) qw.write(" ")
+        qw.write("-0")
+        qw.write("   0")
+        qw.newLine()
+        for (i in 1..lhv.toString().length + 1) qw.write("-")
+        qw.newLine()
+        qw.write(" ")
+        qw.write(lhv.toString())
+
+        qw.close()
+        return
+    }
+    val ans = lhv / rhv
     var digit = (rhv * ans.toString()[0].toString().toInt()).toString() //вычитаемое
     var number = digit.length //номер цифры которой буду сносить
     val z = lhv.toString().substring(0, number).toInt() //шоб в строку влезло))
-    var upperNumber = if (z >= digit.toInt()) z else lhv.toString().substring(0, number + 1).toInt() //уменьшаемое
-    println(upperNumber)
+    var upperNumber = if (z >= digit.toInt()) z.toString() else lhv.toString().substring(0, number + 1) //уменьшаемое
     qw.write(" ")
     qw.write(lhv.toString())
     qw.write(" | ")
@@ -543,11 +560,10 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         qw.write("-")
     qw.newLine()
 
-    upperNumber = ((upperNumber - digit.toInt()).toString() + lhv.toString()[number]).toInt()
-    println(upperNumber)
+    upperNumber = ((upperNumber.toInt() - digit.toInt()).toString() + lhv.toString()[number])
 
-    for (i in 1..number - upperNumber.toString().length + 2) qw.write(" ")
-    qw.write(upperNumber.toString())
+    for (i in 1..number - upperNumber.length + 2) qw.write(" ")
+    qw.write(upperNumber)
 
     //к этому моменту выполненно первое вычитание подчекивание а написан результат со снесенной цифрой
     for (i in 1 until ans.toString().length) { //основной цикл
@@ -562,8 +578,8 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         qw.newLine()
 
         //2! подчеркивание
-        for (p in 1..number - max(digit.length + 1, upperNumber.toString().length) + 1) qw.write(" ")
-        for (k in 1..max(upperNumber.toString().length, digit.length + 1))
+        for (p in 1..number - max(digit.length + 1, upperNumber.length) + 1) qw.write(" ")
+        for (k in 1..max(upperNumber.length, digit.length + 1))
             qw.write("-")
         qw.newLine()
 
@@ -571,15 +587,15 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         //3! результат
         upperNumber =
             if (number < lhv.toString().length)  //элсе срабатывает в конце программы, когда не нужно сносить цифру, тк они закончились
-                ((upperNumber - digit.toInt()).toString() + lhv.toString()[number]).toInt()
+                ((upperNumber.toInt() - digit.toInt()).toString() + lhv.toString()[number])
             else
-                ((upperNumber - digit.toInt()).toString()).toInt()
+                ((upperNumber.toInt() - digit.toInt()).toString())
 
         if (number < lhv.toString().length)
             for (q in 1..number - upperNumber.toString().length + 2) qw.write(" ")
         else
             for (q in 1..number - upperNumber.toString().length + 1) qw.write(" ")
-        qw.write(upperNumber.toString())
+        qw.write(upperNumber)
     }
 
     qw.close()

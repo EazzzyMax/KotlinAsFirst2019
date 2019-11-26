@@ -4,6 +4,7 @@ package lesson7.task1
 
 import java.io.File
 import java.lang.StringBuilder
+import kotlin.math.max
 
 /**
  * Пример
@@ -519,24 +520,69 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
  */
 fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     val ans = lhv / rhv
-    val output = File(outputName).bufferedWriter()
-    output.write(" ")
-    output.write(lhv.toString())
-    output.write(" | ")
-    output.write(rhv.toString())
-    output.newLine()
+    val qw = File(outputName).bufferedWriter()
+    var digit = (rhv * ans.toString()[0].toString().toInt()).toString() //вычитаемое
+    var number = digit.length //номер цифры которой буду сносить
+    val z = lhv.toString().substring(0, number).toInt() //шоб в строку влезло))
+    var upperNumber = if (z >= digit.toInt()) z else lhv.toString().substring(0, number + 1).toInt() //уменьшаемое
+    println(upperNumber)
+    qw.write(" ")
+    qw.write(lhv.toString())
+    qw.write(" | ")
+    qw.write(rhv.toString())
+    qw.newLine()
+    qw.write("-")
+    qw.write(digit)
 
-    val space = 0
 
-    for (i in 1..ans.toString().length) {
-        for (z in 0 until space) {
-            output.write(" ")
-        }
+    for (i in 1..3 + lhv.toString().length - digit.length) qw.write(" ")
+    qw.write(ans.toString())
 
+    qw.newLine()
+    for (i in 0..digit.length) //поддчеркивание
+        qw.write("-")
+    qw.newLine()
+
+    upperNumber = ((upperNumber - digit.toInt()).toString() + lhv.toString()[number]).toInt()
+    println(upperNumber)
+
+    for (i in 1..number - upperNumber.toString().length + 2) qw.write(" ")
+    qw.write(upperNumber.toString())
+
+    //к этому моменту выполненно первое вычитание подчекивание а написан результат со снесенной цифрой
+    for (i in 1 until ans.toString().length) { //основной цикл
+        number++
+        digit = (rhv * ans.toString()[i].toString().toInt()).toString() //вычитаемое
+        qw.newLine()
+
+        //1! вычитание
+        for (p in 1..number - digit.length) qw.write(" ")
+        qw.write("-")
+        qw.write(digit)
+        qw.newLine()
+
+        //2! подчеркивание
+        for (p in 1..number - max(digit.length + 1, upperNumber.toString().length) + 1) qw.write(" ")
+        for (k in 1..max(upperNumber.toString().length, digit.length + 1))
+            qw.write("-")
+        qw.newLine()
+
+
+        //3! результат
+        upperNumber =
+            if (number < lhv.toString().length)  //элсе срабатывает в конце программы, когда не нужно сносить цифру, тк они закончились
+                ((upperNumber - digit.toInt()).toString() + lhv.toString()[number]).toInt()
+            else
+                ((upperNumber - digit.toInt()).toString()).toInt()
+
+        if (number < lhv.toString().length)
+            for (q in 1..number - upperNumber.toString().length + 2) qw.write(" ")
+        else
+            for (q in 1..number - upperNumber.toString().length + 1) qw.write(" ")
+        qw.write(upperNumber.toString())
     }
 
+    qw.close()
 
-
-    output.close()
+    for (i in 1..2) println()
 }
-

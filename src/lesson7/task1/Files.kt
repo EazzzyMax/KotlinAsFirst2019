@@ -548,7 +548,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
 
     }
 
-
+    //////////////////////////////////////////////////////////////////////////////////////////////////
     val mainList = lhv.toString().split("").filter { it != "" }.map { it.toInt() }  //делимое в листе
     val ansString = (lhv / rhv).toString()                      //строчка ответ
     val cycles = ansString.length - 1                           //количество репитов в главном цикле
@@ -587,11 +587,13 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     for (i in 1..cycles) { //main cycle
         qw.newLine() //111111111111111111111111111111111 вычитаемое
         digit = rhv * ansList[i]
-        if (firstSpace) qw.write(" ")
+        if (firstSpace && number - len(digit) != 0) qw.write(" ")
+        println("$upperDigit - $digit")
+        println("number $number")
         for (i in 1..number - len(digit) - 1) qw.write(" ") //пробелы перед digit
         qw.write("-$digit")
         qw.newLine() //222222222222222222222222222222222 подчеркивание
-        if (firstSpace) qw.write(" ")
+        if (firstSpace && number - len(digit) != 0) qw.write(" ")
         for (i in 1..number - max(len(digit) + 1, len(upperDigit))) qw.write(" ")
         for (i in 1..max(len(digit) + 1, len(upperDigit))) qw.write("-")
         qw.newLine() //333333333333333333333333333333333 результат

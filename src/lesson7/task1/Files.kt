@@ -61,16 +61,17 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
     for (str in input) { //по строчечкам
         for (wordZ in str.split(" ")) { //по словечечкам
             val word = wordZ.toLowerCase()
-            for (search in substrings.toSet()) {  //проверяю каждую по отдельности есть ли в слове
-                for (i in 0..word.length - search.length) { //перебор строчки 012 123 234 345 456 ... n-2 n-1 n
+            for (search in substrings.toSet()) {  //проверяю каждую тупа по отдельности есть ли в слове
+                for (i in 0..word.length - search.length) {
                     if (word.substring(i, i + search.length) == search.toLowerCase()) {
-                        answer[search] = answer[search] ?: 0 + 1
+                        answer[search] = answer.getOrDefault(search, 0) + 1
                     }
                 }
             }
         }
     }
     return answer
+
 }
 
 

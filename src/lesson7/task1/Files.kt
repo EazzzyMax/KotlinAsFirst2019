@@ -518,87 +518,93 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
  * Используемые пробелы, отступы и дефисы должны в точности соответствовать примеру.
  *
  */
-fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
-    val qw = File(outputName).bufferedWriter()
-    if (lhv < rhv) {
-        qw.write(" ")
-        qw.write(lhv.toString())
-        qw.write(" | ")
-        qw.write(rhv.toString())
-        qw.newLine()
-        for (i in 2..lhv.toString().length) qw.write(" ")
-        qw.write("-0")
-        qw.write("   0")
-        qw.newLine()
-        for (i in 1..lhv.toString().length + 1) qw.write("-")
-        qw.newLine()
-        qw.write(" ")
-        qw.write(lhv.toString())
 
+fun len(t: Int): Int =    //длина int
+    t.toString().length
+
+fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
+    if (lhv < rhv) {
+        var qw = File(outputName).bufferedWriter()
+        if (lhv < 10) {
+            qw.write(" $lhv | $rhv")
+            qw.newLine()
+            qw.write("-0   0")
+            qw.newLine()
+            qw.write("--")
+            qw.newLine()
+            qw.write(" $lhv")
+        } else {
+            qw.write("$lhv | $rhv")
+            qw.newLine()
+            for (i in 3..len(lhv)) qw.write(" ")
+            qw.write("-0   0")
+            qw.newLine()
+            for (i in 1..len(lhv)) qw.write("-")
+            qw.newLine()
+            qw.write(lhv.toString())
+        }
         qw.close()
         return
+
     }
-    val ans = lhv / rhv
-    var digit = (rhv * ans.toString()[0].toString().toInt()).toString() //вычитаемое
-    var number = digit.length //номер цифры которой буду сносить
-    val z = lhv.toString().substring(0, number).toInt() //шоб в строку влезло))
-    var upperNumber = if (z >= digit.toInt()) z.toString() else lhv.toString().substring(0, number + 1) //уменьшаемое
-    qw.write(" ")
-    qw.write(lhv.toString())
-    qw.write(" | ")
-    qw.write(rhv.toString())
-    qw.newLine()
-    qw.write("-")
-    qw.write(digit)
 
 
-    for (i in 1..3 + lhv.toString().length - digit.length) qw.write(" ")
-    qw.write(ans.toString())
-
-    qw.newLine()
-    for (i in 0..digit.length) //поддчеркивание
-        qw.write("-")
-    qw.newLine()
-
-    upperNumber = ((upperNumber.toInt() - digit.toInt()).toString() + lhv.toString()[number])
-
-    for (i in 1..number - upperNumber.length + 2) qw.write(" ")
-    qw.write(upperNumber)
-
-    //к этому моменту выполненно первое вычитание подчекивание а написан результат со снесенной цифрой
-    for (i in 1 until ans.toString().length) { //основной цикл
+    val mainList = lhv.toString().split("").filter { it != "" }.map { it.toInt() }  //делимое в листе
+    val ansString = (lhv / rhv).toString()                      //строчка ответ
+    val cycles = ansString.length - 1                           //количество репитов в главном цикле
+    val ansList = ansString.split("").filter { it != "" }.map { it.toInt() }    //ответ в листе
+    var digit = ansList[0] * rhv                                 //вычитаемое
+    var upperDigit = lhv.toString().substring(0, len(digit)).toInt() //то из чего вычитаю на данном этапе
+    var number = len(upperDigit)                    //номер сносимой цифры из mainList
+    if (upperDigit < digit) {
+        upperDigit = upperDigit * 10 + mainList[number]
         number++
-        digit = (rhv * ans.toString()[i].toString().toInt()).toString() //вычитаемое
-        qw.newLine()
-
-        //1! вычитание
-        for (p in 1..number - digit.length) qw.write(" ")
-        qw.write("-")
-        qw.write(digit)
-        qw.newLine()
-
-        //2! подчеркивание
-        for (p in 1..number - max(digit.length + 1, upperNumber.length) + 1) qw.write(" ")
-        for (k in 1..max(upperNumber.length, digit.length + 1))
-            qw.write("-")
-        qw.newLine()
-
-
-        //3! результат
-        upperNumber =
-            if (number < lhv.toString().length)  //элсе срабатывает в конце программы, когда не нужно сносить цифру, тк они закончились
-                ((upperNumber.toInt() - digit.toInt()).toString() + lhv.toString()[number])
-            else
-                ((upperNumber.toInt() - digit.toInt()).toString())
-
-        if (number < lhv.toString().length)
-            for (q in 1..number - upperNumber.toString().length + 2) qw.write(" ")
-        else
-            for (q in 1..number - upperNumber.toString().length + 1) qw.write(" ")
-        qw.write(upperNumber)
     }
+    val firstSpace = len(digit) == len(upperDigit)                            //нужен ли первый пробел
+//конец прилюдий. приступаем к пожилому шрексу
+    var qw = File(outputName).bufferedWriter()
+    if (firstSpace) qw.write(" ")  //ну ето тот первый пробел которого не будет при делениее 111 на 9 например
+    qw.write("$lhv | $rhv")
+    qw.newLine()
+    qw.write("-$digit")
+    for (i in 1..len(lhv) - len(digit) + 2) qw.write(" ") //пробелы перед ответом
+    if (firstSpace) qw.write(" ")
+    qw.write(ansString)
+    qw.newLine()
+    for (i in 1..len(digit) + 1) qw.write("-") //первое подчеркивание
+    qw.newLine()
+    upperDigit -= digit
+    if (firstSpace) qw.write(" ")
+    for (i in 1..number - (len(upperDigit))) qw.write(" ") //пожилая арефметика (пробелы перед upperDigit)
+    qw.write(upperDigit.toString()) //записываю остаточек сразу тк может быть 0 а условия гавёные
+    if (ansString.length > 1) qw.write(mainList[number].toString()) //если это не конец то сношу цифорку
+    if (ansString.length > 1) upperDigit =
+        upperDigit * 10 + mainList[number] //если это не конец изменяю upperDigit (остаток+снос)
+    number++
 
+
+
+    for (i in 1..cycles) { //main cycle
+        qw.newLine() //111111111111111111111111111111111 вычитаемое
+        digit = rhv * ansList[i]
+        if (firstSpace) qw.write(" ")
+        for (i in 1..number - len(digit) - 1) qw.write(" ") //пробелы перед digit
+        qw.write("-$digit")
+        qw.newLine() //222222222222222222222222222222222 подчеркивание
+        if (firstSpace) qw.write(" ")
+        for (i in 1..number - max(len(digit) + 1, len(upperDigit))) qw.write(" ")
+        for (i in 1..max(len(digit) + 1, len(upperDigit))) qw.write("-")
+        qw.newLine() //333333333333333333333333333333333 результат
+        if (firstSpace) qw.write(" ")
+        upperDigit -= digit
+        for (i in 1..number - len(upperDigit)) qw.write(" ")
+        qw.write(upperDigit.toString())
+        if (number != len(lhv)) qw.write(mainList[number].toString())
+        if (number != len(lhv)) upperDigit = upperDigit * 10 + mainList[number] //условие для конца
+        number++
+
+
+    }
     qw.close()
-
-    for (i in 1..2) println()
 }
+

@@ -524,7 +524,7 @@ fun len(t: Int): Int =    //длина int
 
 fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     if (lhv < rhv) {
-        var qw = File(outputName).bufferedWriter()
+        val qw = File(outputName).bufferedWriter()
         if (lhv < 10) {
             qw.write(" $lhv | $rhv")
             qw.newLine()
@@ -562,7 +562,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     }
     val firstSpace = len(digit) == len(upperDigit)                            //нужен ли первый пробел
 //конец прилюдий. приступаем к пожилому шрексу
-    var qw = File(outputName).bufferedWriter()
+    val qw = File(outputName).bufferedWriter()
     if (firstSpace) qw.write(" ")  //ну ето тот первый пробел которого не будет при делениее 111 на 9 например
     qw.write("$lhv | $rhv")
     qw.newLine()

@@ -64,7 +64,7 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
             for (search in substrings.toSet()) {  //проверяю каждую тупа по отдельности есть ли в слове
                 for (i in 0..word.length - search.length) {
                     if (word.substring(i, i + search.length) == search.toLowerCase()) {
-                        answer[search] = answer.getOrDefault(search, 0) + 1
+                        answer[search] = answer[search]!! + 1
                     }
                 }
             }

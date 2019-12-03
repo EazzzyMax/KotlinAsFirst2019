@@ -378,22 +378,34 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
-    val newSet = list.toSet()
-    val map = mutableMapOf<Int, Int>()
-    for (i in newSet)
-        map[number - i] = i
+    val map = mutableMapOf<Int, Pair<Int, Int>>()
+    val fastAns = mutableListOf(-1, -1) //тута будут два одинаковых числа 2 3 4 5 5 6 7, 10 -> 3 to 4
 
-    for (i in newSet) {
-        if (map.getOrDefault(i, -1) != -1 && list.indexOf(i) != list.lastIndexOf(number - i))
-            return list.indexOf(i) to list.lastIndexOf(number - i)
+    for ((index, i) in list.withIndex()) { //тута заполняю чо нада
+        if (i == number / 2 && number % 2 == 0) {
+            if (fastAns[0] != -1) {
+                println("второй")
+                fastAns[1] = index
+            } else {
+                println("первый")
+                fastAns[0] = index
+            }
+        } else map[number - i] = 1 to index
+
+    }
+    println(fastAns)
+    if (fastAns[0] != -1 && fastAns[1] != -1) {
+        print("сработало")
+        return fastAns[0] to fastAns[1]
+    } //тута проверка на фатсанс
+
+    for ((index, i) in list.withIndex()) {
+        if (map.getOrDefault(i, 0 to 0) != 0 to 0)
+            return index to map[i]!!.second
     }
 
-//    for (num in newList) {
-//        if (newList.any { it == number - num } && list.indexOf(num) != list.lastIndexOf(number - num))
-//            return list.indexOf(num) to list.lastIndexOf(number - num)
-//
-//    }
-    return -1 to -1
+
+    return -1 to -1 //всё? (    буду скучать по этой задаче
 }
 
 /**

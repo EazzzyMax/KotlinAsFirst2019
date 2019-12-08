@@ -397,15 +397,14 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
     if (fastAns[0] != -1 && fastAns[1] != -1) {
         print("сработало")
         return fastAns[0] to fastAns[1]
-    } //тута проверка на фатсанс
+    }
 
     for ((index, i) in list.withIndex()) {
         if (map.getOrDefault(i, 0 to 0) != 0 to 0)
             return index to map[i]!!.second
     }
 
-
-    return -1 to -1 //всё? (    буду скучать по этой задаче
+    return -1 to -1
 }
 
 /**

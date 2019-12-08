@@ -147,7 +147,7 @@ fun circleByDiameter(diameter: Segment): Circle =
  * или: y * cos(angle) = x * sin(angle) + b, где b = point.y * cos(angle) - point.x * sin(angle).
  * Угол наклона обязан находиться в диапазоне от 0 (включительно) до PI (исключительно).
  */
-class Line private constructor(val b: Double, val angle: Double) {
+class Line(val b: Double, val angle: Double) {
     init {
         require(angle >= 0 && angle < PI) { "Incorrect line angle: $angle" }
     }
@@ -207,7 +207,28 @@ class Line private constructor(val b: Double, val angle: Double) {
  *
  * Построить прямую по отрезку
  */
-fun lineBySegment(s: Segment): Line = TODO()
+fun lineBySegment(s: Segment): Line {
+    val ay = s.begin.y
+    val ax = s.begin.x
+    val by = s.end.y
+    val bx = s.end.x
+
+    println(s)
+    println("$ax, $ay  -  $bx, $by")
+
+    if (ax == bx) {
+        return Line(-ay, PI / 2)
+    }
+
+
+
+
+    return if (atan((ay - by) / (ax - bx)) >= 0) {
+        Line(s.begin, atan((ay - by) / (ax - bx)))
+    } else {
+        Line(s.begin, atan((ay - by) / (ax - bx)) + PI)
+    }
+}
 
 /**
  * Средняя

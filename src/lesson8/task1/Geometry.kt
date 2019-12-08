@@ -3,10 +3,7 @@
 package lesson8.task1
 
 import lesson1.task1.sqr
-import kotlin.math.PI
-import kotlin.math.cos
-import kotlin.math.sin
-import kotlin.math.sqrt
+import kotlin.math.*
 
 /**
  * Точка на плоскости
@@ -163,7 +160,36 @@ class Line private constructor(val b: Double, val angle: Double) {
      * Найти точку пересечения с другой линией.
      * Для этого необходимо составить и решить систему из двух уравнений (каждое для своей прямой)
      */
-    fun crossPoint(other: Line): Point = TODO()
+    fun crossPoint(other: Line): Point {
+        if (angle == PI / 2 || other.angle == PI / 2) {
+            if (angle == PI / 2) {
+                println(1)
+                println(Point(-b, (-b) * tan(other.angle) + other.b))
+                println()
+                return Point(-b, (-b) * tan(other.angle) + other.b)
+            } else {
+                println(2)
+                println(Point(-other.b, (-other.b - b) * tan(angle) + b))
+                println()
+                return Point(-other.b, (-other.b - b) * tan(angle) + b)
+            }
+        }
+        val k1 = tan(angle)
+        println(k1)
+        val b1 = b / cos(angle)
+        println(b1)
+        val k2 = tan(other.angle)
+        println(k2)
+        val b2 = other.b / cos(other.angle)
+        println(b2)
+        val xxx = (b2 - b1) / (k1 - k2)
+        println(xxx)
+        val yyy = k1 * xxx + b1
+        println(yyy)
+        println(Point(xxx, yyy))
+        println()
+        return Point(xxx, yyy)
+    }
 
     override fun equals(other: Any?) = other is Line && angle == other.angle && b == other.b
 

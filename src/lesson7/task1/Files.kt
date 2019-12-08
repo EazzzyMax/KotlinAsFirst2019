@@ -549,7 +549,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
 
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
     val mainList = lhv.toString().split("").filter { it != "" }.map { it.toInt() }  //делимое в листе
     val ansString = (lhv / rhv).toString()                      //строчка ответ
     val cycles = ansString.length - 1                           //количество репитов в главном цикле
@@ -562,6 +562,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         number++
     }
     val firstSpace = len(digit) == len(upperDigit)                            //нужен ли первый пробел
+
 //конец прилюдий. приступаем к пожилому шрексу
     val qw = File(outputName).bufferedWriter()
     if (firstSpace) qw.write(" ")  //ну ето тот первый пробел которого не будет при делениее 111 на 9 например

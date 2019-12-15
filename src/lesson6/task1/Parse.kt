@@ -545,3 +545,9 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     return (mainList)
 }
 
+fun newFun(digitsInStr: String, number: Double): Map<Double, Int> {
+    val legal = digitsInStr.contains(Regex("""^([0-9])+$"""))
+    print(legal)
+    return mapOf(1.0 to 1)
+}
+

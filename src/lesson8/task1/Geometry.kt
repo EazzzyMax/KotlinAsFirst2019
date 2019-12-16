@@ -206,7 +206,7 @@ fun lineBySegment(s: Segment): Line {
     val bx = s.end.x
 
     if (ax == bx) {
-        return Line(-ay, PI / 2)
+        return Line(-ax, PI / 2)
     }
 
     return if (atan((ay - by) / (ax - bx)) >= 0) {

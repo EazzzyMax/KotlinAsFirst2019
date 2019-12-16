@@ -168,9 +168,4 @@ class Tests {
         assertThrows(IllegalStateException::class.java) { computeDeviceCells(20, ">>>>>>>>>>>>>", 12) }
     }
 
-    @Test
-    @Tag("Impossible")
-    fun newFun() {
-        assertEquals(mapOf(1.0 to 1), newFun("500", 500.0))
-    }
 }

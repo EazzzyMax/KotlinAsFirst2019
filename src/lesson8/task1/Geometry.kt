@@ -203,20 +203,20 @@ fun lineBySegment(s: Segment): Line {
     println("--------------_--------------")
     val ay = s.begin.y
     val ax = s.begin.x
-    val by = s.end.y
-    val bx = s.end.x
+    val zy = s.end.y
+    val zx = s.end.x
 
-    if (ax == bx) {
+    if (ax == zx) {
         return Line(-ax, PI / 2)
     }
     //Line(s.begin, atan((ay - by) / (ax - bx)))
-    println(atan((ay - by) / (ax - bx)))
-    println(atan((ay - by) / (ax - bx)) + PI)
-    println((atan((ay - by) / (ax - bx)) + PI) % PI)
+    println(atan((ay - zy) / (ax - zx)))
+    println(atan((ay - zy) / (ax - zx)) + PI)
+    println((atan((ay - zy) / (ax - zx)) + PI) % PI)
 
-    if (atan((ay - by) / (ax - bx)) == PI) return Line(s.begin, 0.0)
-    else if (atan((ay - by) / (ax - bx)) < 0) return Line(s.begin, (atan((ay - by) / (ax - bx)) + PI) % PI)
-    else return Line(s.begin, atan((ay - by) / (ax - bx)))
+    if (atan((ay - zy) / (ax - zx)) == PI) return Line(s.begin, 0.0)
+    else if (atan((ay - zy) / (ax - zx)) < 0) return Line(s.begin, (atan((ay - zy) / (ax - zx)) + PI) % PI)
+    else return Line(s.begin, atan((ay - zy) / (ax - zx)))
 }
 
 /**

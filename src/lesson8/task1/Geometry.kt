@@ -200,6 +200,7 @@ class Line(val b: Double, val angle: Double) {
  * Построить прямую по отрезку
  */
 fun lineBySegment(s: Segment): Line {
+    println("--------------_--------------")
     val ay = s.begin.y
     val ax = s.begin.x
     val by = s.end.y
@@ -208,12 +209,14 @@ fun lineBySegment(s: Segment): Line {
     if (ax == bx) {
         return Line(-ax, PI / 2)
     }
+    //Line(s.begin, atan((ay - by) / (ax - bx)))
+    println(atan((ay - by) / (ax - bx)))
+    println(atan((ay - by) / (ax - bx)) + PI)
+    println((atan((ay - by) / (ax - bx)) + PI) % PI)
 
-    return if (atan((ay - by) / (ax - bx)) >= 0) {
-        Line(s.begin, atan((ay - by) / (ax - bx)))
-    } else {
-        Line(s.begin, atan((ay - by) / (ax - bx)) + PI)
-    }
+    if (atan((ay - by) / (ax - bx)) == PI) return Line(s.begin, 0.0)
+    else if (atan((ay - by) / (ax - bx)) < 0) return Line(s.begin, (atan((ay - by) / (ax - bx)) + PI) % PI)
+    else return Line(s.begin, atan((ay - by) / (ax - bx)))
 }
 
 /**

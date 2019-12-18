@@ -172,8 +172,11 @@ fun dateDigitToStr(digital: String): String {
  */
 fun flattenPhoneNumber(phone: String): String {
     val legal = phone.contains(Regex("""^\+? *\d+ *(\( *\d+ *-* *\d*\))?( *\d*-*)*$"""))
-
     if (!legal) return ""
+
+    val kotoedShit = phone.contains(Regex("""\n"""))
+    if (kotoedShit) return ""
+
     val phoneList = mutableListOf<Char>()
     val motTrash = setOf('1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '+')
 

@@ -399,7 +399,6 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
         if (map[i] != null)
             return index to map[i]!!.second
     }
-
     return -1 to -1
 }
 

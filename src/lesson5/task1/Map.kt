@@ -384,23 +384,19 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
     for ((index, i) in list.withIndex()) { //тута заполняю чо нада
         if (i == number / 2 && number % 2 == 0) {
             if (fastAns[0] != -1) {
-                println("второй")
                 fastAns[1] = index
             } else {
-                println("первый")
                 fastAns[0] = index
             }
         } else map[number - i] = 1 to index
 
     }
-    println(fastAns)
     if (fastAns[0] != -1 && fastAns[1] != -1) {
-        print("сработало")
         return fastAns[0] to fastAns[1]
     }
 
     for ((index, i) in list.withIndex()) {
-        if (map.getOrDefault(i, 0 to 0) != 0 to 0)
+        if (map[i] != null)
             return index to map[i]!!.second
     }
 

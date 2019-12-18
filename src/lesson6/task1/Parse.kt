@@ -545,4 +545,74 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     return (mainList)
 }
 
+//fun newFun(digitsInStr: String, number: Double): MutableMap<String, Int> {
+//    val legal = "$digitsInStr; ".contains(Regex("""^((\d)+(.\d\d)?; +)+$"""))
+//    if (!legal) return mutableMapOf("-1.0" to -1)
+//    val dig = digitsInStr.replace(" ", "").split(";") //список из букаф
+//    val list = dig.map { it.toDouble() }  //список даблов для счета
+//    val map = mutableMapOf<String, Int>() //мапик для ответа
+//    println(list)
+//    var n = 0
+//    var sum = 0.0
+//    var lastN = 0
+//
+//    while (true) {
+//        if (list[n] + sum <= number) {
+//            sum += list[n]
+//            map[list[n].toString()] = map.getOrDefault(list[n].toString(), 0) + 1
+//            lastN = n
+//        } else n += 1
+//
+//        if (sum == number) break
+//
+//        if (n >= list.size) {
+//            sum -= list[lastN]
+//            map[list[n].toString()] = map.getOrDefault(list[n].toString(), 0) - 1
+//            n = lastN + 1
+//        }
+//    }
+//
+//    println(sum)
+//
+//    return map
+//}
+
+//fun finalTest(str: String): Set<String> {
+//    val legal = "$str\n".contains(Regex("""^(\w+ \d\d?:\d\d\n)+$""")) //проверка времени далее
+//    if (!legal) {
+//        println("регех")
+//        return setOf()
+//    }
+//    val chaters = str.split("\n") //по строчкам каждый чатер
+//    println(chaters)
+//    val listChat = chaters.map { it.split(" ")[0] to it.split(" ")[1] } //лист пар. имена повторяются. в мап пока нельзя
+//    val mapChat = mutableMapOf<String, List<Int>>() //мапик имя-время в минутах (60H+M). доп проверка на легальность
+//    for ((name, second) in listChat) {
+//        val time = second.split(":")
+//        val hours = time[0].toInt()   //часы
+//        val minutes = time[1].toInt() //минуты
+//        if (hours > 23) {
+//            println("часы")
+//            return setOf()
+//        }                                                                   //проверка
+//        if (minutes > 60) {
+//            println("минуты")
+//            return setOf()
+//        }                                                                 //проверка
+//        mapChat[name] = mapChat.getOrDefault(name, listOf()) + (hours * 60 + minutes)  //прошло -> могу преобразовывать
+//    }
+//    val sortMap = mapChat.map { it.key to it.value.sorted() } //сортировка шоб не проверять все пары, а ток соседей
+//    println(sortMap)
+//    val spam = mutableSetOf<String>()
+//    for ((name, timeList) in sortMap) {
+//        for (i in 0 until timeList.size - 1) {
+//            if (timeList[i + 1] - timeList[i] < 2) {
+//                spam += name
+//                break
+//            }
+//        }
+//    }
+//    return spam
+//}
+
 

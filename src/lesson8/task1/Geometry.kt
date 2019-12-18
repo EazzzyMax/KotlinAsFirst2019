@@ -76,7 +76,7 @@ data class Circle(val center: Point, val radius: Double) {
      * расстояние между их центрами минус сумма их радиусов.
      * Расстояние между пересекающимися окружностями считать равным 0.0.
      */
-    fun distance(other: Circle): Double {////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    fun distance(other: Circle): Double {
         val a = center.distance(other.center) - (radius + other.radius)
         return if (a < 0) 0.0 else a
     }
@@ -110,13 +110,7 @@ fun diameter(vararg points: Point): Segment {
     if (points.size < 2) throw IllegalArgumentException()
     var max = 0.0
     var answer = Segment(points[0], points[1])
-//    var minx = points.minBy { it.x }!!.x
-//    var miny = points.minBy { it.y }!!.y
-//    var farPoint = points.maxBy { it.distance(Point(minx, miny)) }!!
-//    var secondPoint = points.maxBy { it.distance(farPoint) }!!
-//    return Segment(farPoint, secondPoint)
 
-    // алгоритм для дебилов.
     for (i in 0 until points.size - 1) {
         for (j in i + 1 until points.size) {
             if (points[i].distance(points[j]) > max) {
@@ -162,16 +156,10 @@ class Line(val b: Double, val angle: Double) {
      */
     fun crossPoint(other: Line): Point {
         if (angle == PI / 2 || other.angle == PI / 2) {
-            if (angle == PI / 2) {
-                println(1)
-                println(Point(-b, (-b) * tan(other.angle) + other.b))
-                println()
-                return Point(-b, (-b) * tan(other.angle) + other.b)
+            return if (angle == PI / 2) {
+                Point(-b, (-b) * tan(other.angle) + other.b / cos(other.angle))
             } else {
-                println(2)
-                println(Point(-other.b, (-other.b - b) * tan(angle) + b))
-                println()
-                return Point(-other.b, (-other.b - b) * tan(angle) + b)
+                Point(-other.b, (-other.b - b) * tan(angle) + b)
             }
         }
         val k1 = tan(angle)
@@ -199,8 +187,15 @@ class Line(val b: Double, val angle: Double) {
  *
  * Построить прямую по отрезку
  */
+
+fun legalAngle(ay: Double, zy: Double, ax: Double, zx: Double): Double {
+    return when {
+        (atan((ay - zy) / (ax - zx)) < 0) -> (atan((ay - zy) / (ax - zx)) + PI) % PI
+        else -> atan((ay - zy) / (ax - zx))
+    }
+}
+
 fun lineBySegment(s: Segment): Line {
-    println("--------------_--------------")
     val ay = s.begin.y
     val ax = s.begin.x
     val zy = s.end.y
@@ -209,14 +204,9 @@ fun lineBySegment(s: Segment): Line {
     if (ax == zx) {
         return Line(-ax, PI / 2)
     }
-    //Line(s.begin, atan((ay - by) / (ax - bx)))
-    println(atan((ay - zy) / (ax - zx)))
-    println(atan((ay - zy) / (ax - zx)) + PI)
-    println((atan((ay - zy) / (ax - zx)) + PI) % PI)
 
-    if (atan((ay - zy) / (ax - zx)) == PI) return Line(s.begin, 0.0)
-    else if (atan((ay - zy) / (ax - zx)) < 0) return Line(s.begin, (atan((ay - zy) / (ax - zx)) + PI) % PI)
-    else return Line(s.begin, atan((ay - zy) / (ax - zx)))
+    return Line(s.begin, legalAngle(ay, zy, ax, zx))
+
 }
 
 /**
@@ -234,11 +224,7 @@ fun lineByPoints(a: Point, b: Point): Line = lineBySegment(Segment(a, b))
 fun bisectorByPoints(a: Point, b: Point): Line {
     val middlePoint = Point((a.x + b.x) / 2, (a.y + b.y) / 2)
 
-    val angle = if (atan((a.y - b.y) / (a.x - b.x)) >= 0) {
-        atan((a.y - b.y) / (a.x - b.x))
-    } else {
-        atan((a.y - b.y) / (a.x - b.x)) + PI
-    }
+    val angle = legalAngle(a.y, b.y, a.x, b.x)
 
     val newAngle = (angle + PI / 2) % PI
 
@@ -276,7 +262,9 @@ fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> {
  */
 fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
     val abh = bisectorByPoints(a, b) //высота
+
     val bch = bisectorByPoints(b, c) //высота
+
     val center = abh.crossPoint(bch) //пересечение
     val radius = center.distance(a)
     return Circle(center, radius)

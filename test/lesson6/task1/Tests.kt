@@ -55,6 +55,7 @@ class Tests {
         assertEquals("", dateDigitToStr("29.02.1993"))
     }
 
+
     @Test
     @Tag("Normal")
     fun flattenPhoneNumber() {

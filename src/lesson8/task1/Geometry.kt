@@ -159,7 +159,7 @@ class Line(val b: Double, val angle: Double) {
             return if (angle == PI / 2) {
                 Point(-b, (-b) * tan(other.angle) + other.b / cos(other.angle))
             } else {
-                Point(-other.b, (-other.b - b) * tan(angle) + b)
+                Point(-other.b, (-other.b - b) * tan(angle) + b / cos(angle))
             }
         }
         val k1 = tan(angle)
